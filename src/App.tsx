@@ -9,12 +9,8 @@ import Store from './pages/Store';
 
 function getHeaderTitle(path: string) {
   switch (path) {
-    case '/':
-      return 'หน้าหลัก';
     case '/category':
       return 'ประเภทสินค้าที่วางขาย';
-    case '/product':
-      return 'สินค้า';
     case '/store':
       return 'ร้านค้า';
     default:
