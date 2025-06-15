@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { BsFillInboxesFill } from "react-icons/bs";
+import { BsBagHeartFill } from "react-icons/bs";
 import './Layout.css';
 import {
   FaBars,
-  FaBoxOpen,
-  FaHome,
   FaPlus,
   FaSearch,
-  FaUser,
 } from 'react-icons/fa';
 import unknownImage from '../../assets/images/unknown.png';
 
@@ -31,6 +30,16 @@ function Layout({ headerTitle, avatarUrl, children }: LayoutProps) {
           <h5 className="mb-4 fw-bold text-primary">เมนู</h5>
           <ul className="list-unstyled">
             <li>
+              <Link to="/category" onClick={closeSidebar} className="menu-item">
+                <BsFillInboxesFill className="me-2" /> ประเภทสินค้าที่วางขาย
+              </Link>
+            </li>
+            <li>
+              <Link to="/store" onClick={closeSidebar} className="menu-item">
+                <BsBagHeartFill className="me-2" /> ร้านค้า
+              </Link>
+            </li>
+            {/* <li>
               <Link to="/" onClick={closeSidebar} className="menu-item">
                 <FaHome className="me-2" /> หน้าหลัก
               </Link>
@@ -44,7 +53,7 @@ function Layout({ headerTitle, avatarUrl, children }: LayoutProps) {
               <Link to="/category" onClick={closeSidebar} className="menu-item">
                 <FaUser className="me-2" /> โปรไฟล์
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>
