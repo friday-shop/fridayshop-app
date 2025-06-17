@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BsFillInboxesFill } from "react-icons/bs";
-import { BsBagHeartFill } from "react-icons/bs";
+import { BsFillInboxesFill } from 'react-icons/bs';
+import { BsBagHeartFill } from 'react-icons/bs';
 import './Layout.css';
-import {
-  FaBars,
-  FaPlus,
-  FaSearch,
-} from 'react-icons/fa';
+import { FaBars, FaPlus, FaSearch } from 'react-icons/fa';
 import unknownImage from '../../assets/images/unknown.png';
+import { BsCurrencyExchange } from 'react-icons/bs';
 
 interface LayoutProps {
   headerTitle: string;
@@ -39,21 +36,11 @@ function Layout({ headerTitle, avatarUrl, children }: LayoutProps) {
                 <BsBagHeartFill className="me-2" /> ร้านค้า
               </Link>
             </li>
-            {/* <li>
-              <Link to="/" onClick={closeSidebar} className="menu-item">
-                <FaHome className="me-2" /> หน้าหลัก
+            <li>
+              <Link to="/payment" onClick={closeSidebar} className="menu-item">
+                <BsCurrencyExchange className="me-2" /> ชำระเงิน
               </Link>
             </li>
-            <li>
-              <Link to="/product" onClick={closeSidebar} className="menu-item">
-                <FaBoxOpen className="me-2" /> สินค้า
-              </Link>
-            </li>
-            <li>
-              <Link to="/category" onClick={closeSidebar} className="menu-item">
-                <FaUser className="me-2" /> โปรไฟล์
-              </Link>
-            </li> */}
           </ul>
         </div>
       </div>
