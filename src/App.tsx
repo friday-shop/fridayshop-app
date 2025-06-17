@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Category from './pages/Category';
 import Product from './pages/Product';
 import Store from './pages/Store';
+import Payment from './pages/Payment';
 
 // const AVATAR = 'https://randomuser.me/api/portraits/women/65.jpg';
 
@@ -13,6 +14,8 @@ function getHeaderTitle(path: string) {
       return 'ประเภทสินค้าที่วางขาย';
     case '/store':
       return 'ร้านค้า';
+    case '/payment':
+      return 'ชำระเงิน';
     default:
       return '';
   }
@@ -29,6 +32,7 @@ function App() {
         <Route path="/category" element={<Category />} />
         <Route path="/product" element={<Product />} />
         <Route path="/store" element={<Store />} />
+        <Route path="/payment" element={<Payment />} />
       </Routes>
     </Layout>
   );
