@@ -12,62 +12,16 @@ function Store() {
         margin: '0 auto',
       }}
     >
-      <StoreCard
-        title="yoobee"
-        description="พร้อมใช้งาน"
-        imageUrl={unknownImage}
-        status={true}
-        id="1"
-      />
-      <StoreCard
-        title="yoobee"
-        description="พร้อมใช้งาน"
-        imageUrl={unknownImage}
-        status={true}
-        id="1"
-      />
-      <StoreCard
-        title="yoobee"
-        description="พร้อมใช้งาน"
-        imageUrl={unknownImage}
-        status={true}
-        id="1"
-      />
-      <StoreCard
-        title="yoobee"
-        description="พร้อมใช้งาน"
-        imageUrl={unknownImage}
-        status={true}
-        id="1"
-      />
-      <StoreCard
-        title="yoobee"
-        description="พร้อมใช้งาน"
-        imageUrl={unknownImage}
-        status={true}
-        id="1"
-      />
-      <StoreCard
-        title="yoobee"
-        description="พร้อมใช้งาน"
-        imageUrl={unknownImage}
-        status={true}
-        id="1"
-      />
-      <StoreCard
-        title="yoobee"
-        description="พร้อมใช้งาน"
-        imageUrl={unknownImage}
-        status={true}
-        id="1"
-      />
-      <StoreCard
-        title="yoobee"
-        description="พร้อมใช้งาน"
-        imageUrl={unknownImage}
-        status={true}
-        id="1"
-      />
+      {[...Array(10)].map((_, i) => (
+        <StoreCard
+          key={i}
+          title="yoobee"
+          description="พร้อมใช้งาน"
+          imageUrl={unknownImage}
+          status={true}
+          id={i.toString()}
+        />
+      ))}
     </div>
   );
 }

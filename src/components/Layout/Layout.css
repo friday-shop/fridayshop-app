@@ -155,8 +155,12 @@
 
 /* Main content area padding */
 .content-area {
-  padding: 1.5rem; /* Consistent padding */
-  flex-grow: 1; /* Allow content area to expand */
+  padding: 1.5rem;
+  flex-grow: 1;
+  overflow-y: auto; /* เพิ่ม */
+  max-height: calc(
+    100vh - 120px
+  ); /* ความสูงลบส่วน header เพื่อให้ scroll เฉพาะเนื้อหา */
 }
 
 /* Desktop view (min-width: 768px) */
