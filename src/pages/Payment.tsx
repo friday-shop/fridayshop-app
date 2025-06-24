@@ -1,50 +1,7 @@
-const PackageDetailsCard = () => {
-  // สไตล์สำหรับปุ่ม "ใช้งาน"
-  const buttonStyle = {
-    backgroundColor: '#16DBCC',
-    color: 'white',
-    border: 'none',
-  };
-
-  return (
-    <div className="card-body p-4 p-md-5">
-      {/* Title */}
-      <h2 className="card-title text-center fs-3 fw-bold mb-3">fridayshop</h2>
-      <hr className="my-4" />
-      {/* Details Section */}
-      <div className="row gy-0 gx-md-4">
-        <div className="col-md-6 text-center text-md-start">
-          <p className="mb-2">แพ็กเกจที่เลือก : Basic</p>
-          <p className="mb-2">วันหมดอายุ : 15/06/2568</p>
-          <p className="mb-2">ต่ออายุอัตโนมัติ : ต่อ</p>
-        </div>
-        <div className="col-md-6 text-center text-md-start">
-          <p className="mb-2">เครดิตคงเหลือในระบบ : 50</p>
-          <p className="mb-2">จำนวนการเช็คทั้งหมด : 100</p>
-          <p className="mb-2">จำนวนการเช็คคงเหลือ : 100</p>
-        </div>
-      </div>
-      {/* Token Section */}
-      <div className="mt-4 pt-2">
-        <label htmlFor="token-input" className="form-label fw-bold">
-          token
-        </label>
-        <div className="input-group">
-          <input
-            id="token-input"
-            type="text"
-            className="form-control py-2"
-            placeholder="กรอก token"
-            aria-label="Token Input"
-          />
-          <button className="btn px-4" style={buttonStyle} type="button">
-            ใช้งาน
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { useEffect } from 'react';
+import { useLayoutStore } from '../store/useLayoutStore';
+import useAxios from '../hooks/useAxios';
+import type { IPayment, IPaymentAccount } from '../types/payment';
 
 // Component สำหรับการ์ดกรอกข้อมูลบัญชีธนาคาร
 const AccountDetailsCard = () => {
@@ -135,22 +92,84 @@ function Payment() {
     color: '#343a5b',
   };
 
+  const { setTitle, setContent } = useLayoutStore();
+  useEffect(() => {
+    setTitle('ตั้งค่าการชำระเงิน');
+    setContent(null);
+  }, [setTitle]);
+
+  const paymentAccount = useAxios<IPaymentAccount>({
+    method: 'GET',
+    url: '/payments/account',
+  });
+
+  const paymentOwner = useAxios<IPayment>({
+    method: 'GET',
+    url: '/payments/owner',
+  });
+
   return (
-    // Container หลักสำหรับจัดวางการ์ดทั้งหมด
     <div
+      className="container"
       style={{
         display: 'flex',
         flexDirection: 'column',
         gap: '2rem',
-        padding: '5px',
       }}
     >
-      {/* ----- การ์ดข้อมูลแพ็กเกจ (ของเดิม) ----- */}
       <div
         className="card border-0 shadow-lg rounded-4 overflow-hidden w-100"
         style={{ maxWidth: '600px', margin: '0 auto', ...cardTextStyle }}
       >
-        <PackageDetailsCard />
+        <div className="card-body p-4 p-md-5">
+          <h2 className="card-title text-center fs-3 fw-bold mb-3">
+            fridayshop
+          </h2>
+          <hr className="my-4" />
+          <div className="row gy-0 gx-md-4">
+            <div className="col-md-6 text-center text-md-start">
+              <p className="mb-2">แพ็กเกจที่เลือก : Basic</p>
+              <p className="mb-2">วันหมดอายุ : 15/06/2568</p>
+              <p className="mb-2">ต่ออายุอัตโนมัติ : ต่อ</p>
+            </div>
+            <div className="col-md-6 text-center text-md-start">
+              <p className="mb-2">
+                เครดิตคงเหลือในระบบ : {paymentAccount?.data?.creditRemaining}
+              </p>
+              <p className="mb-2">
+                จำนวนการเช็คทั้งหมด : {paymentAccount?.data?.quotaLimit}
+              </p>
+              <p className="mb-2">
+                จำนวนการเช็คคงเหลือ : {paymentAccount?.data?.quotaRemaining}
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 pt-2">
+            <label htmlFor="token-input" className="form-label fw-bold">
+              token
+            </label>
+            <div className="input-group">
+              <input
+                id="token-input"
+                type="text"
+                className="form-control py-2"
+                placeholder="กรอก token"
+                aria-label="Token Input"
+              />
+              <button
+                className="btn px-4"
+                style={{
+                  backgroundColor: '#16DBCC',
+                  color: 'white',
+                  border: 'none',
+                }}
+                type="button"
+              >
+                ใช้งาน
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ----- การ์ดข้อมูลบัญชี (ส่วนที่เพิ่มใหม่) ----- */}

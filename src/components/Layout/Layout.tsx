@@ -1,19 +1,22 @@
+import './Layout.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BsFillInboxesFill } from 'react-icons/bs';
 import { BsBagHeartFill } from 'react-icons/bs';
-import './Layout.css';
 import { FaBars, FaPlus, FaSearch } from 'react-icons/fa';
-import unknownImage from '../../assets/images/unknown.png';
 import { BsCurrencyExchange } from 'react-icons/bs';
+import { useLayoutStore } from '../../store/useLayoutStore';
+import { useBottomSheetStore } from '../../store/useBottomSheetStore';
+import unknownImage from '../../assets/images/unknown.png';
 
 interface LayoutProps {
-  headerTitle: string;
-  avatarUrl?: string;
   children: React.ReactNode;
 }
 
-function Layout({ headerTitle, avatarUrl, children }: LayoutProps) {
+function Layout({ children }: LayoutProps) {
+  const { open } = useBottomSheetStore();
+  const { title, search, setSearch, content } = useLayoutStore();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const closeSidebar = () => setSidebarOpen(false);
@@ -27,12 +30,20 @@ function Layout({ headerTitle, avatarUrl, children }: LayoutProps) {
           <h5 className="mb-4 fw-bold text-primary">เมนู</h5>
           <ul className="list-unstyled">
             <li>
-              <Link to="/category" onClick={closeSidebar} className="menu-item">
+              <Link
+                to="/categories"
+                onClick={closeSidebar}
+                className="menu-item"
+              >
                 <BsFillInboxesFill className="me-2" /> ประเภทสินค้าที่วางขาย
               </Link>
             </li>
             <li>
-              <Link to="/store" onClick={closeSidebar} className="menu-item">
+              <Link
+                to="/providers"
+                onClick={closeSidebar}
+                className="menu-item"
+              >
                 <BsBagHeartFill className="me-2" /> ร้านค้า
               </Link>
             </li>
@@ -60,30 +71,45 @@ function Layout({ headerTitle, avatarUrl, children }: LayoutProps) {
               <FaBars size={20} />
             </button>
             <h5 className="mb-0 text-nowrap text-primary fw-bold">
-              {headerTitle}
+              {title || 'ไม่พบหัวข้อ'}
             </h5>
             <img
-              src={avatarUrl || unknownImage}
+              src={unknownImage}
               alt="avatar"
               className="rounded-circle"
               style={{ width: 36, height: 36 }}
             />
           </div>
-          <div className="header-bottom-row">
-            <div className="search-input-container">
-              <FaSearch className="search-icon" />
-              <input type="text" className="search-input" placeholder="ค้นหา" />
+          {content && (
+            <div className="header-bottom-row">
+              <div className="search-input-container">
+                <FaSearch className="search-icon" />
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="ค้นหา"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+              </div>
+              <button
+                className="add-button"
+                onClick={() => open(content)}
+                aria-label="Add new item"
+              >
+                <FaPlus />
+              </button>
             </div>
-            <button
-              className="add-button"
-              onClick={() => null}
-              aria-label="Add new item"
-            >
-              <FaPlus />
-            </button>
-          </div>
+          )}
         </div>
-        <div className="content-area">{children}</div>
+        <div
+          className="content-area"
+          style={{
+            height: `calc(100vh - ${content ? '120px' : '70px'})`,
+          }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

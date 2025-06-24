@@ -1,22 +1,15 @@
 import React from 'react';
 import truncateText from '../utils/truncateText';
 import Toggle from './Toggle';
+import type { IProvider } from '../types/provider';
 
-interface StoreCardProps {
-  title: string;
-  description: string;
-  imageUrl: string;
-  status: boolean;
-  id: string;
+interface ProviderCardProps {
+  data: IProvider;
+  mutate: () => void;
 }
 
-const StoreCard: React.FC<StoreCardProps> = ({
-  title,
-  description,
-  imageUrl,
-  status,
-  id,
-}) => {
+const ProviderCard: React.FC<ProviderCardProps> = ({ data, mutate }) => {
+  const { name, imageUrl } = data;
   const [toggle, setToggle] = React.useState(true);
   return (
     <div
@@ -28,12 +21,12 @@ const StoreCard: React.FC<StoreCardProps> = ({
       <div className="d-flex flex-row justify-content-start align-items-center gap-3">
         <img
           src={imageUrl}
-          alt={title}
+          alt={name}
           className="rounded-4"
           style={{ height: '73px', width: '73px', objectFit: 'cover' }}
         />
         <div className="text-primary">
-          <h5 className="card-title fw-bolder">{title}</h5>
+          <h5 className="card-title fw-bolder">{name}</h5>
           <div className="d-flex flex-row align-items-center gap-2">
             <div
               style={{
@@ -49,7 +42,7 @@ const StoreCard: React.FC<StoreCardProps> = ({
                 color: '#16DBCC',
               }}
             >
-              {truncateText(description, 75)}
+              {truncateText('hello', 75)}
             </p>
           </div>
         </div>
@@ -59,4 +52,4 @@ const StoreCard: React.FC<StoreCardProps> = ({
   );
 };
 
-export default StoreCard;
+export default ProviderCard;

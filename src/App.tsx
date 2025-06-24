@@ -1,40 +1,37 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import Home from './pages/Home';
-import Category from './pages/Category';
+import CategoryList from './pages/CategoryList';
+import ProductList from './pages/ProductList';
 import Product from './pages/Product';
-import Store from './pages/Store';
+import ProviderList from './pages/ProviderList';
 import Payment from './pages/Payment';
-
-// const AVATAR = 'https://randomuser.me/api/portraits/women/65.jpg';
-
-function getHeaderTitle(path: string) {
-  switch (path) {
-    case '/category':
-      return 'ประเภทสินค้าที่วางขาย';
-    case '/store':
-      return 'ร้านค้า';
-    case '/payment':
-      return 'ชำระเงิน';
-    default:
-      return '';
-  }
-}
+import BottomSheet from './components/BottomSheet/BottomSheet';
+import Login from './pages/Login';
+import useUser from './hooks/useUser';
 
 function App() {
-  const location = useLocation();
-  const headerTitle = getHeaderTitle(location.pathname);
-
+  const user = useUser();
   return (
-    <Layout headerTitle={headerTitle}>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/category" element={<Category />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/store" element={<Store />} />
-        <Route path="/payment" element={<Payment />} />
-      </Routes>
-    </Layout>
+    <>
+      {user?.data ? (
+        <Layout>
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path="/categories" element={<CategoryList />} />
+            <Route path="/products/:categoryId" element={<ProductList />} />
+            <Route path="/product/:id" element={<Product />} />
+            <Route path="/providers" element={<ProviderList />} />
+            <Route path="/payment" element={<Payment />} />
+          </Routes>
+        </Layout>
+      ) : (
+        <Routes>
+          <Route index element={<Login />} />
+        </Routes>
+      )}
+      <BottomSheet />
+    </>
   );
 }
 

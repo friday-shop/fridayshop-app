@@ -1,48 +1,41 @@
 import React, { useState } from 'react';
-import truncateText from '../utils/truncateText';
-import type { ICategory } from '../types/category';
+import type { IProductResponse } from '../types/product';
 import unknownImage from '../assets/images/unknown.png';
 import Toggle from './Toggle';
-import { useBottomSheetStore } from '../store/useBottomSheetStore';
-import CategoryForm from './CategoryForm';
 import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../hooks/useAxios';
 import Swal from 'sweetalert2';
 import type { AxiosError } from 'axios';
 
-interface CategoryCardProps {
+interface ProductCardProps {
   preview?: boolean;
-  data: ICategory;
+  data: IProductResponse;
   mutate?: () => void;
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = ({
+const ProductCard: React.FC<ProductCardProps> = ({
   data,
   mutate,
   preview = false,
 }) => {
-  const { name, description, imageUrl } = data;
-  const { open, close } = useBottomSheetStore();
+  const { name, purchasable, imageUrl } = data;
   const [selected, setSelected] = useState<boolean>();
   const navigate = useNavigate();
 
   const onUpdate = () => {
-    setTimeout(() => {
-      close();
-    }, 1500);
     mutate?.();
   };
 
   const handleChangeStatus = async () => {
     try {
-      await axiosInstance.patch(`/categories/${data._id}`, {
+      await axiosInstance.patch(`/products/${data._id}`, {
         ...data,
         isOpen: !data.isOpen,
       });
       Swal.fire({
         icon: 'success',
         title: 'สำเร็จ',
-        text: 'เปลี่ยนสถานะประเภทสินค้าสำเร็จ',
+        text: 'เปลี่ยนสถานะสินค้าสำเร็จ',
         showConfirmButton: false,
         timer: 1500,
       });
@@ -63,11 +56,11 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
 
   const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`/categories/${data._id}`);
+      await axiosInstance.delete(`/products/${data._id}`);
       Swal.fire({
         icon: 'success',
         title: 'สำเร็จ',
-        text: 'ลบข้อมูลประเภทสินค้าสำเร็จ',
+        text: 'ลบข้อมูลสินค้าสำเร็จ',
         showConfirmButton: false,
         timer: 1500,
       });
@@ -122,17 +115,18 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         <div className="card-body text-primary">
           <h5 className="card-title fw-bolder">{name}</h5>
           <p className="card-text text-muted">
-            {truncateText(description, 75)}
+            ราคา {data.price} บาท <br />
+            สินค้าคงเหลือ {!preview ? purchasable : 0} ชิ้น
           </p>
           <button
             className="btn fw-bold rounded px-4 border-0 w-100"
             style={{ backgroundColor: '#876DFD', color: 'white' }}
             onClick={(event) => {
               event.stopPropagation();
-              navigate(`/products/${data._id}`);
+              navigate(`/product/${data._id}`);
             }}
           >
-            ดูรายการสินค้า
+            ซื้อสินค้า
           </button>
         </div>
       </div>
@@ -149,23 +143,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
             <button
               className="rounded-bottom-4 border-0 fw-bold"
               style={{
-                backgroundColor: '#FFBB38',
-                height: '5vh',
-                width: '50%',
-                color: 'white',
-              }}
-              onClick={() =>
-                open(<CategoryForm initialValues={data} mutate={onUpdate} />)
-              }
-            >
-              แก้ไข
-            </button>
-            <button
-              className="rounded-bottom-4 border-0 fw-bold"
-              style={{
                 backgroundColor: '#FE5C73',
                 height: '5vh',
-                width: '50%',
+                width: '100%',
                 color: 'white',
               }}
               onClick={handleDelete}
@@ -179,4 +159,4 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   );
 };
 
-export default CategoryCard;
+export default ProductCard;

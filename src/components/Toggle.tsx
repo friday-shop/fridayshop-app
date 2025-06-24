@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ToggleProps {
   status: boolean;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const Toggle: React.FC<ToggleProps> = ({ status, onClick }) => {
@@ -13,7 +13,7 @@ const Toggle: React.FC<ToggleProps> = ({ status, onClick }) => {
         width: '50px',
         height: '26px',
         borderRadius: '50px',
-        backgroundColor: status ? '#16DBCC' : '#FE5C73',
+        backgroundColor: status ? '#16DBCC' : '#DFEAF2',
         display: 'flex',
         alignItems: 'center',
         padding: '2px',
