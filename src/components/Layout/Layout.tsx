@@ -6,7 +6,6 @@ import { BsBagHeartFill } from 'react-icons/bs';
 import { FaBars, FaPlus, FaSearch } from 'react-icons/fa';
 import { BsCurrencyExchange } from 'react-icons/bs';
 import { useLayoutStore } from '../../store/useLayoutStore';
-import { useBottomSheetStore } from '../../store/useBottomSheetStore';
 import unknownImage from '../../assets/images/unknown.png';
 
 interface LayoutProps {
@@ -14,8 +13,7 @@ interface LayoutProps {
 }
 
 function Layout({ children }: LayoutProps) {
-  const { open } = useBottomSheetStore();
-  const { title, search, setSearch, content } = useLayoutStore();
+  const { title, search, setSearch, triggerCreate } = useLayoutStore();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -80,32 +78,30 @@ function Layout({ children }: LayoutProps) {
               style={{ width: 36, height: 36 }}
             />
           </div>
-          {content && (
-            <div className="header-bottom-row">
-              <div className="search-input-container">
-                <FaSearch className="search-icon" />
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder="ค้นหา"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-              </div>
-              <button
-                className="add-button"
-                onClick={() => open(content)}
-                aria-label="Add new item"
-              >
-                <FaPlus />
-              </button>
+          <div className="header-bottom-row">
+            <div className="search-input-container">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                className="search-input"
+                placeholder="ค้นหา"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
             </div>
-          )}
+            <button
+              className="add-button"
+              onClick={() => triggerCreate()}
+              aria-label="Add new item"
+            >
+              <FaPlus />
+            </button>
+          </div>
         </div>
         <div
           className="content-area"
           style={{
-            height: `calc(100vh - ${content ? '120px' : '70px'})`,
+            height: 'calc(100vh - 120px)',
           }}
         >
           {children}

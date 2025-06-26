@@ -4,6 +4,8 @@ export interface ICategory {
   description: string;
   imageUrl?: string;
   isOpen: boolean;
+  isUseForm: boolean;
+  formFormat?: string;
   createdAt: Date;
   updatedAt: Date;
 }

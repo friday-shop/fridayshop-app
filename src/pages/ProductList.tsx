@@ -1,27 +1,60 @@
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import type { IProductResponse } from '../types/product';
+import type { IProduct } from '../types/product';
 import { axiosInstance } from '../hooks/useAxios';
 import { useLayoutStore } from '../store/useLayoutStore';
 import type { HttpResponsePagination } from '../types/global';
+import ProductItem from '../components/Product/ProductItem';
 import { useParams } from 'react-router-dom';
 import type { ICategory } from '../types/category';
-import ProductCreateForm from '../components/ProductCreateForm';
-import ProductCard from '../components/ProductCard';
 
 const PER_PAGE = Number(import.meta.env.VITE_PER_PAGE) || 5;
 
-function ProductList() {
+function Product() {
   const { categoryId } = useParams<{ categoryId: string }>();
-  const { setTitle, setContent } = useLayoutStore();
+  const { search, setTitle } = useLayoutStore();
   const [page, setPage] = useState(1);
-  const [products, setProducts] = useState<IProductResponse[]>([]);
+  const [newProducts, setNewProducts] = useState<IProduct[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
-  const [data, setData] =
-    useState<HttpResponsePagination<IProductResponse> | null>(null);
+  const [data, setData] = useState<HttpResponsePagination<IProduct> | null>(
+    null,
+  );
   const [error, setError] = useState<unknown>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    useLayoutStore.setState({
+      onCreate: () => {
+        const currentDate = new Date();
+        setNewProducts((prev) => [
+          {
+            _id: currentDate.toString(),
+            isOpen: false,
+            categoryId: categoryId!,
+            name: '',
+            price: 0,
+            imageUrl: '',
+            providers: [
+              {
+                id: '',
+                providerId: '',
+                isOpen: true,
+                name: '',
+                price: 0,
+                quantity: 0,
+              },
+            ],
+            expirationDays: 1,
+            createdAt: currentDate,
+            updatedAt: currentDate,
+          },
+          ...prev,
+        ]);
+      },
+    });
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +73,7 @@ function ProductList() {
     };
 
     fetchData();
-  }, [page]);
+  }, [page, search]);
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -50,9 +83,6 @@ function ProductList() {
             `/categories/${categoryId}`,
           );
           setTitle(response.data?.name);
-          setContent(
-            <ProductCreateForm categoryId={categoryId} mutate={refreshData} />,
-          );
         } catch (error) {
           console.error('Error fetching category:', error);
         }
@@ -99,21 +129,6 @@ function ProductList() {
     }
   };
 
-  if (isLoading && page === 1) {
-    return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: '80vh' }}
-      >
-        <div
-          className="spinner-border text-primary"
-          role="status"
-          style={{ width: '3rem', height: '3rem' }}
-        />
-      </div>
-    );
-  }
-
   if (error && page === 1) {
     return (
       <div className="container text-center mt-5">
@@ -157,12 +172,25 @@ function ProductList() {
         }
       >
         <div className="row g-4">
-          {products.map((product) => (
+          {newProducts.map((product) => (
             <div
               key={product._id}
               className="col-xl-3 col-lg-4 col-md-6 col-12"
             >
-              <ProductCard data={product} mutate={refreshData} />
+              <ProductItem
+                initialValues={product}
+                mutate={refreshData}
+                onDelete={() => {
+                  setNewProducts((prev) =>
+                    prev.filter((newProduct) => newProduct._id !== product._id),
+                  );
+                }}
+              />
+            </div>
+          ))}
+          {products.map((product) => (
+            <div key={product._id} className="col-md-6 col-12">
+              <ProductItem initialValues={product} mutate={refreshData} />
             </div>
           ))}
         </div>
@@ -171,4 +199,4 @@ function ProductList() {
   );
 }
 
-export default ProductList;
+export default Product;

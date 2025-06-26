@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import CategoryCard from '../components/CategoryCard';
 import type { ICategory } from '../types/category';
 import { axiosInstance } from '../hooks/useAxios';
 import { useLayoutStore } from '../store/useLayoutStore';
 import type { HttpResponsePagination } from '../types/global';
-import CategoryForm from '../components/CategoryForm';
+import CategoryItem from '../components/Category/CategoryItem';
 
 const PER_PAGE = Number(import.meta.env.VITE_PER_PAGE) || 5;
 
 function Category() {
-  const { search, setTitle, setContent } = useLayoutStore();
+  const { search, setTitle } = useLayoutStore();
   const [page, setPage] = useState(1);
+  const [newCategories, setNewCategories] = useState<ICategory[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
@@ -20,6 +20,28 @@ function Category() {
   );
   const [error, setError] = useState<unknown>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    useLayoutStore.setState({
+      onCreate: () => {
+        const currentDate = new Date();
+        setNewCategories((prev) => [
+          {
+            _id: currentDate.toString(),
+            name: '',
+            description: '',
+            imageUrl: '',
+            isOpen: false,
+            isUseForm: false,
+            formFormat: '',
+            createdAt: currentDate,
+            updatedAt: currentDate,
+          },
+          ...prev,
+        ]);
+      },
+    });
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +64,6 @@ function Category() {
 
   useEffect(() => {
     setTitle('ประเภทสินค้าที่วางขาย');
-    setContent(<CategoryForm mutate={refreshData} />);
   }, [setTitle]);
 
   useEffect(() => {
@@ -126,12 +147,30 @@ function Category() {
         }
       >
         <div className="row g-4">
+          {newCategories.map((category) => (
+            <div
+              key={category._id}
+              className="col-xl-3 col-lg-4 col-md-6 col-12"
+            >
+              <CategoryItem
+                initialValues={category}
+                mutate={refreshData}
+                onDelete={() => {
+                  setNewCategories((prev) =>
+                    prev.filter(
+                      (newCategory) => newCategory._id !== category._id,
+                    ),
+                  );
+                }}
+              />
+            </div>
+          ))}
           {categories.map((category) => (
             <div
               key={category._id}
               className="col-xl-3 col-lg-4 col-md-6 col-12"
             >
-              <CategoryCard data={category} mutate={refreshData} />
+              <CategoryItem initialValues={category} mutate={refreshData} />
             </div>
           ))}
         </div>

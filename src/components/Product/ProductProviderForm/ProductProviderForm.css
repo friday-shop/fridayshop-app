@@ -1,0 +1,105 @@
+.provider-list-container {
+  border: 1px solid #e9ecef;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.provider-item {
+  border-bottom: 1px solid #e9ecef;
+}
+.provider-item:last-child {
+  border-bottom: none;
+}
+
+.provider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  background-color: #f8f9fa;
+  transition: background-color 0.2s ease;
+}
+
+.provider-header:hover {
+  background-color: #f1f3f5;
+}
+
+.provider-title {
+  font-weight: 600;
+  color: #495057;
+}
+
+.provider-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #6c757d;
+}
+
+.btn-delete-provider {
+  background: none;
+  border: none;
+  color: #dc3545;
+  padding: 0.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-delete-provider:hover {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+.btn-check-provider {
+  background: none;
+  border: none;
+  color: #16dbcc;
+  padding: 0.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-check-provider:hover {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.provider-body {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.4s ease-in-out,
+    opacity 0.3s ease-in-out,
+    padding 0.4s ease-in-out;
+  padding: 0 1rem;
+  background-color: #fff;
+}
+
+.provider-body.expanded {
+  max-height: 500px;
+  opacity: 1;
+  padding: 1.5rem 1rem;
+}
+
+.btn-add-provider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+  border: none;
+}

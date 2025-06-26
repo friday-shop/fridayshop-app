@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { create } from 'zustand';
 
 type LayoutState = {
@@ -7,18 +6,16 @@ type LayoutState = {
   search: string;
   setSearch: (search: string) => void;
   resetSearch: () => void;
-  content?: ReactNode;
-  setContent: (content: ReactNode) => void;
-  resetContent?: () => void;
+  onCreate: () => void;
+  triggerCreate: () => void;
 };
 
-export const useLayoutStore = create<LayoutState>((set) => ({
+export const useLayoutStore = create<LayoutState>((set, get) => ({
   title: '',
   setTitle: (title) => set({ title }),
   search: '',
   setSearch: (search) => set({ search }),
   resetSearch: () => set({ search: '' }),
-  content: null,
-  setContent: (content) => set({ content }),
-  resetContent: () => set({ content: null }),
+  onCreate: () => {},
+  triggerCreate: () => get().onCreate(),
 }));
