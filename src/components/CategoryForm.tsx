@@ -23,6 +23,8 @@ const validationSchema = Yup.object({
     .required('กรุณากรอกรายละเอียด'),
   imageUrl: Yup.string().url('URL ไม่ถูกต้อง').required('กรุณากรอก URL รูปภาพ'),
   isOpen: Yup.boolean().required('กรุณาระบุสถานะการเปิดใช้งาน'),
+  isUseForm: Yup.boolean().required('กรุณาระบุการใช้งานฟอร์ม'),
+  formFormat: Yup.string().optional(),
 });
 
 export default function CategoryForm({
@@ -81,6 +83,8 @@ export default function CategoryForm({
           description: '',
           imageUrl: '',
           isOpen: false,
+          isUseForm: false,
+          formFormat: '',
           ...initialValues,
         } as Omit<ICategory, '_id' | 'createdAt' | 'updatedAt'>
       }
@@ -153,6 +157,36 @@ export default function CategoryForm({
                 </div>
               </div>
             )}
+            <div className="mb-3 form-check">
+              <Field
+                type="checkbox"
+                id="isUseForm"
+                name="isUseForm"
+                className="form-check-input"
+              />
+              <label htmlFor="isUseForm" className="form-check-label">
+                ใช้แบบฟอร์ม
+              </label>
+              <div className="text-danger mt-1">
+                <ErrorMessage name="isUseForm" />
+              </div>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="formFormat" className="form-label">
+                รูปแบบฟอร์ม
+              </label>
+              <Field
+                as="textarea"
+                rows={4}
+                id="formFormat"
+                name="formFormat"
+                className="form-control"
+              />
+              <div className="text-danger mt-1">
+                <ErrorMessage name="formFormat" />
+              </div>
+            </div>
             <button
               type="submit"
               className="btn btn-primary w-100"

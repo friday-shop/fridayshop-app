@@ -19,6 +19,8 @@ const BottomSheet: React.FC = () => {
   };
 
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
     const clientY = 'touches' in event ? event.touches[0].pageY : event.pageY;
     setIsDragging(true);
     setStartY(clientY);
@@ -28,6 +30,8 @@ const BottomSheet: React.FC = () => {
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent | TouchEvent) => {
+      event.stopPropagation();
+      event.preventDefault();
       if (!isDragging) return;
       const clientY = 'touches' in event ? event.touches[0].pageY : event.pageY;
       const delta = startY - clientY;
@@ -93,7 +97,7 @@ const BottomSheet: React.FC = () => {
             <span></span>
           </div>
         </div>
-        <div>{content}</div>
+        <div className="body">{content}</div>
       </div>
     </div>
   );
