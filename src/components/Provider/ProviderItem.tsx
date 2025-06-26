@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import type { ICategory } from '../../types/category';
-import CategoryCard from './CategoryCard';
+import type { IProvider } from '../../types/provider';
+import ProviderCard from './ProviderCard';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { axiosInstance } from '../../hooks/useAxios';
 import Swal from 'sweetalert2';
 import type { AxiosError } from 'axios';
-import CategoryForm from './CategoryForm';
+import ProviderForm from './ProviderForm';
 
-interface CategoryItemProps {
-  initialValues: ICategory;
+interface ProviderItemProps {
+  preview?: boolean;
+  initialValues: IProvider;
   mutate?: () => void;
   onDelete?: () => void;
 }
@@ -18,17 +19,15 @@ const validationSchema = Yup.object({
     .min(4, 'ชื่อประเภทต้องมีอย่างน้อย 4 ตัวอักษร')
     .max(100, 'ชื่อประเภทต้องไม่เกิน 100 ตัวอักษร')
     .required('กรุณากรอกชื่อประเภท'),
-  description: Yup.string()
-    .min(4, 'รายละเอียดต้องมีอย่างน้อย 4 ตัวอักษร')
-    .max(1000, 'รายละเอียดต้องไม่เกิน 1000 ตัวอักษร')
-    .required('กรุณากรอกรายละเอียด'),
-  imageUrl: Yup.string().url('URL ไม่ถูกต้อง').required('กรุณากรอก URL รูปภาพ'),
+  url: Yup.string().url('URL ไม่ถูกต้อง').required('กรุณากรอก URL'),
+  imageUrl: Yup.string().url('URL รูปภาพไม่ถูกต้อง').optional(),
   isOpen: Yup.boolean().required('กรุณาระบุสถานะการเปิดใช้งาน'),
-  isUseForm: Yup.boolean().required('กรุณาระบุการใช้งานฟอร์ม'),
-  formFormat: Yup.string().optional(),
+  cookie: Yup.string().required('กรุณากรอก cookie'),
+  subDomain: Yup.string().required('กรุณากรอก sub-domain'),
+  filterPasswords: Yup.array().of(Yup.string()).optional(),
 });
 
-const CategoryItem: React.FC<CategoryItemProps> = ({
+const ProviderItem: React.FC<ProviderItemProps> = ({
   initialValues,
   mutate,
   onDelete,
@@ -37,7 +36,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   const [selected, setSelected] = useState<boolean>(isUpdate ? false : true);
   const [isEdit, setIsEdit] = useState<boolean>(isUpdate ? false : true);
 
-  const categoryForm = useFormik<ICategory>({
+  const providerForm = useFormik<IProvider>({
     enableReinitialize: true,
     initialValues,
     validationSchema,
@@ -46,12 +45,12 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
         await axiosInstance.request({
           method: isUpdate ? 'patch' : 'post',
           url: isUpdate
-            ? `/categories/${initialValues._id}`
-            : '/categories/create',
+            ? `/providers/${initialValues._id}`
+            : '/providers/create',
           data: values,
         });
         if (mutate) mutate();
-        Swal.fire('Success', 'Category updated successfully!', 'success');
+        Swal.fire('Success', 'Provider updated successfully!', 'success');
       } catch (error) {
         const axiosError = error as AxiosError;
         Swal.fire('Error', axiosError.message || 'An error occurred.', 'error');
@@ -61,9 +60,8 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
 
   return (
     <div>
-      <CategoryCard
-        preview={!isUpdate}
-        data={categoryForm.values}
+      <ProviderCard
+        data={providerForm.values}
         isEdit={isEdit}
         onClickCard={() => {
           setSelected((prev) => !prev);
@@ -71,7 +69,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
         }}
         onClickChangeStatus={async () => {
           if (isUpdate) {
-            const isCurrentlyOpen = categoryForm.values.isOpen;
+            const isCurrentlyOpen = providerForm.values.isOpen;
             const result = await Swal.fire({
               title: `ยืนยันการ${isCurrentlyOpen ? 'ปิด' : 'เปิด'}หมวดหมู่?`,
               text: `คุณแน่ใจว่าต้องการ${isCurrentlyOpen ? 'ปิด' : 'เปิด'}ใช้งานหมวดหมู่นี้?`,
@@ -85,8 +83,8 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
 
             if (result.isConfirmed) {
               try {
-                await axiosInstance.patch(`/categories/${initialValues._id}`, {
-                  ...categoryForm.values,
+                await axiosInstance.patch(`/providers/${initialValues._id}`, {
+                  ...providerForm.values,
                   isOpen: !isCurrentlyOpen,
                 });
                 if (mutate) mutate();
@@ -106,9 +104,10 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
               }
             }
           } else {
-            categoryForm.setFieldValue('isOpen', !categoryForm.values.isOpen);
+            providerForm.setFieldValue('isOpen', !providerForm.values.isOpen);
           }
         }}
+        errors={providerForm.errors}
       />
       <div
         className={`animated-buttons ${selected && isEdit ? 'slide-down' : ''}`}
@@ -118,7 +117,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           transition: 'max-height 0.5s ease-in-out',
         }}
       >
-        {selected && isEdit && <CategoryForm categoryForm={categoryForm} />}
+        {selected && isEdit && <ProviderForm providerForm={providerForm} />}
       </div>
       <div
         className={`animated-buttons ${selected ? 'slide-down' : ''}`}
@@ -140,7 +139,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
               }}
               onClick={async () => {
                 if (isEdit) {
-                  await categoryForm.submitForm();
+                  await providerForm.submitForm();
                 }
                 setIsEdit(!isEdit);
               }}
@@ -171,7 +170,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
                   try {
                     if (isUpdate) {
                       await axiosInstance.delete(
-                        `/categories/${initialValues._id}`,
+                        `/providers/${initialValues._id}`,
                       );
                       if (mutate) mutate();
                     } else {
@@ -198,4 +197,4 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   );
 };
 
-export default CategoryItem;
+export default ProviderItem;

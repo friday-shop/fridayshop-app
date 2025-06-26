@@ -7,7 +7,6 @@ export interface IProvider {
   cookie: string;
   subDomain: string;
   filterPasswords: string[];
-
   createdAt: Date;
   updatedAt: Date;
 }

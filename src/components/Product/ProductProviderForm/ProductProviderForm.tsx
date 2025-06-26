@@ -6,8 +6,8 @@ import {
   BsChevronUp,
   BsTrash,
   BsCheckCircleFill,
-  BsArrowUp,
-  BsArrowDown,
+  BsFillCaretDownFill,
+  BsFillCaretUpFill,
 } from 'react-icons/bs';
 import type {
   IProduct,
@@ -167,7 +167,7 @@ export default function ProductProviderForm({
                           }}
                           disabled={index === 0}
                         >
-                          <BsArrowUp />
+                          <BsFillCaretUpFill size={16} />
                         </button>
                         <button
                           type="button"
@@ -180,7 +180,7 @@ export default function ProductProviderForm({
                             index === productForm.values.providers.length - 1
                           }
                         >
-                          <BsArrowDown />
+                          <BsFillCaretDownFill size={16} />
                         </button>
                       </div>
                       {isVerified && (
@@ -195,10 +195,29 @@ export default function ProductProviderForm({
                           }}
                         />
                       )}
-                      <span className="provider-title">
-                        {`[${truncateText(providers?.[index]?.name, 7)}] ${truncateText(provider.name || '', 7)} ` ||
-                          `ตัวแทน #${index + 1}`}
-                      </span>
+                      <div className="d-flex flex-column">
+                        <span
+                          className="badge text-white rounded-pill px-3 py-1 mb-1"
+                          style={{
+                            fontSize: '0.75rem',
+                            backgroundColor: '#16DBCC',
+                          }}
+                        >
+                          {truncateText(
+                            providers?.[index]?.name || 'ไม่ทราบชื่อร้าน',
+                            40,
+                          )}
+                        </span>
+                        <span
+                          className="fw-semibold"
+                          style={{ fontSize: '0.9rem' }}
+                        >
+                          {truncateText(
+                            provider.name || `ตัวแทน #${index + 1}`,
+                            14,
+                          )}
+                        </span>
+                      </div>
                     </div>
                     <div className="provider-actions">
                       <button

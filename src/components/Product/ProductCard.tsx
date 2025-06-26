@@ -2,14 +2,12 @@ import React from 'react';
 import type { IProduct } from '../../types/product';
 import unknownImage from '../../assets/images/unknown.png';
 import Toggle from '../Toggle';
-import { useNavigate } from 'react-router-dom';
 
 interface ProductCardProps {
   data: IProduct;
   isEdit: boolean;
   onClickCard: () => void;
   onClickChangeStatus: () => void;
-  preview?: boolean;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -17,10 +15,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   isEdit,
   onClickCard,
   onClickChangeStatus,
-  preview = false,
 }) => {
-  const { _id, name, purchasable, price, imageUrl, quantity } = data;
-  const navigate = useNavigate();
+  const { name, purchasable, price, imageUrl, quantity } = data;
 
   return (
     <div
@@ -55,19 +51,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <h5 className="card-title fw-bolder">{name}</h5>
         <p className="card-text text-muted">
           ราคา {price} บาท <br />
-          สินค้าคงเหลือ {!preview ? quantity || 0 : 0} ชิ้น
+          สินค้าคงเหลือ {quantity || 0} ชิ้น
           <br />
-          สามารถซื้อได้ {!preview ? purchasable || 0 : 0} ชิ้น
+          สามารถซื้อได้ {purchasable || 0} ชิ้น
         </p>
         <button
           className="btn fw-bold rounded px-4 border-0 w-100"
           style={{ backgroundColor: '#876DFD', color: 'white' }}
-          onClick={(event) => {
-            if (!preview) {
-              event.stopPropagation();
-              navigate(`/product/${_id}`);
-            }
-          }}
         >
           ซื้อสินค้า
         </button>

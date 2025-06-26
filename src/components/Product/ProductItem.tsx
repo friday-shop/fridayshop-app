@@ -10,7 +10,6 @@ import ProductForm from './ProductForm';
 import ProductProviderForm from './ProductProviderForm/ProductProviderForm';
 
 interface ProductItemProps {
-  preview?: boolean;
   initialValues: IProduct;
   mutate?: () => void;
   onDelete?: () => void;
@@ -69,7 +68,6 @@ const ProductItem: React.FC<ProductItemProps> = ({
   return (
     <div>
       <ProductCard
-        preview={!isUpdate}
         data={productForm.values}
         isEdit={isEdit}
         onClickCard={() => {
