@@ -76,7 +76,7 @@ export default function ProductProviderForm({
 
     try {
       const response = await axiosInstance.post<IProviderProduct>(
-        `/providers/check/${providerId}`,
+        `/providers/check-product/${providerId}`,
         {
           productId,
         },

@@ -293,10 +293,7 @@ function Provider() {
       >
         <div className="row g-4">
           {newProviders.map((provider) => (
-            <div
-              key={provider._id}
-              className="col-xl-3 col-lg-4 col-md-6 col-12"
-            >
+            <div key={provider._id} className="col-md-6 col-12">
               <ProviderItem
                 initialValues={provider}
                 mutate={refreshData}
@@ -311,10 +308,7 @@ function Provider() {
             </div>
           ))}
           {providers.map((provider) => (
-            <div
-              key={provider._id}
-              className="col-xl-3 col-lg-4 col-md-6 col-12"
-            >
+            <div key={provider._id} className="col-md-6 col-12">
               <ProviderItem initialValues={provider} mutate={refreshData} />
             </div>
           ))}

@@ -9,6 +9,8 @@ export interface IProvider {
   filterPasswords: string[];
   createdAt: Date;
   updatedAt: Date;
+  point?: number;
+  verify?: boolean;
 }
 
 export interface IProviderProduct {

@@ -61,7 +61,7 @@ const ProviderItem: React.FC<ProviderItemProps> = ({
   return (
     <div>
       <ProviderCard
-        data={providerForm.values}
+        providerForm={providerForm}
         isEdit={isEdit}
         onClickCard={() => {
           setSelected((prev) => !prev);
@@ -107,7 +107,6 @@ const ProviderItem: React.FC<ProviderItemProps> = ({
             providerForm.setFieldValue('isOpen', !providerForm.values.isOpen);
           }
         }}
-        errors={providerForm.errors}
       />
       <div
         className={`animated-buttons ${selected && isEdit ? 'slide-down' : ''}`}

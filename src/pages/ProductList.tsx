@@ -173,10 +173,7 @@ function Product() {
       >
         <div className="row g-4">
           {newProducts.map((product) => (
-            <div
-              key={product._id}
-              className="col-xl-3 col-lg-4 col-md-6 col-12"
-            >
+            <div key={product._id} className="col-md-6 col-12">
               <ProductItem
                 initialValues={product}
                 mutate={refreshData}

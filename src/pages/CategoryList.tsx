@@ -148,10 +148,7 @@ function Category() {
       >
         <div className="row g-4">
           {newCategories.map((category) => (
-            <div
-              key={category._id}
-              className="col-xl-3 col-lg-4 col-md-6 col-12"
-            >
+            <div key={category._id} className="col-md-6 col-12">
               <CategoryItem
                 initialValues={category}
                 mutate={refreshData}
@@ -166,10 +163,7 @@ function Category() {
             </div>
           ))}
           {categories.map((category) => (
-            <div
-              key={category._id}
-              className="col-xl-3 col-lg-4 col-md-6 col-12"
-            >
+            <div key={category._id} className="col-md-6 col-12">
               <CategoryItem initialValues={category} mutate={refreshData} />
             </div>
           ))}
