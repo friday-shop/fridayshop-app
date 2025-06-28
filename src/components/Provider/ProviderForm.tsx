@@ -46,7 +46,21 @@ export default function ProviderForm({ providerForm }: ProviderFormProps) {
           <div className="invalid-feedback">{providerForm.errors.imageUrl}</div>
         ) : null}
       </div>
-
+      <div className="form-group">
+        <label htmlFor="url">url</label>
+        <input
+          id="url"
+          name="url"
+          type="text"
+          className={`form-control${providerForm.touched.url && providerForm.errors.url ? ' is-invalid' : ''}`}
+          value={providerForm.values.url}
+          onChange={providerForm.handleChange}
+          onBlur={providerForm.handleBlur}
+        />
+        {providerForm.touched.url && providerForm.errors.url ? (
+          <div className="invalid-feedback">{providerForm.errors.url}</div>
+        ) : null}
+      </div>
       <div className="form-group">
         <label htmlFor="cookie">คุกกี้</label>
         <input
@@ -68,6 +82,8 @@ export default function ProviderForm({ providerForm }: ProviderFormProps) {
           name={'subDomain'}
           className="form-select"
           value={providerForm.values.subDomain}
+          onChange={providerForm.handleChange}
+          onBlur={providerForm.handleBlur}
         >
           <option value="" disabled>
             เลือก Sub-domain

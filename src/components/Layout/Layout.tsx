@@ -28,11 +28,7 @@ function Layout({ children }: LayoutProps) {
           <h5 className="mb-4 fw-bold text-primary">เมนู</h5>
           <ul className="list-unstyled">
             <li>
-              <Link
-                to="/categories"
-                onClick={closeSidebar}
-                className="menu-item"
-              >
+              <Link to="/" onClick={closeSidebar} className="menu-item">
                 <BsFillInboxesFill className="me-2" /> ประเภทสินค้าที่วางขาย
               </Link>
             </li>

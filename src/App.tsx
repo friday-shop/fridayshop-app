@@ -14,7 +14,7 @@ function App() {
       {user?.data ? (
         <Layout>
           <Routes>
-            <Route path="/categories" element={<CategoryList />} />
+            <Route index element={<CategoryList />} />
             <Route path="/products/:categoryId" element={<ProductList />} />
             <Route path="/providers" element={<ProviderList />} />
             <Route path="/payment" element={<Payment />} />

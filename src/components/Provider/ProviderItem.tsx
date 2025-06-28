@@ -42,12 +42,29 @@ const ProviderItem: React.FC<ProviderItemProps> = ({
     validationSchema,
     onSubmit: async (values) => {
       try {
+        const {
+          name,
+          url,
+          imageUrl,
+          isOpen,
+          cookie,
+          subDomain,
+          filterPasswords,
+        } = values;
         await axiosInstance.request({
           method: isUpdate ? 'patch' : 'post',
           url: isUpdate
             ? `/providers/${initialValues._id}`
             : '/providers/create',
-          data: values,
+          data: {
+            name,
+            url,
+            imageUrl,
+            isOpen,
+            cookie,
+            subDomain,
+            filterPasswords,
+          },
         });
         if (mutate) mutate();
         Swal.fire('Success', 'Provider updated successfully!', 'success');
