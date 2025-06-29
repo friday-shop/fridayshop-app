@@ -33,6 +33,7 @@ function Provider() {
             imageUrl: '',
             isOpen: false,
             cookie: '',
+            marker: '',
             subDomain: '',
             filterPasswords: [],
             isUseForm: false,
