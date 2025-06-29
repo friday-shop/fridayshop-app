@@ -23,6 +23,7 @@ const validationSchema = Yup.object({
   imageUrl: Yup.string().url('URL รูปภาพไม่ถูกต้อง').optional(),
   isOpen: Yup.boolean().required('กรุณาระบุสถานะการเปิดใช้งาน'),
   cookie: Yup.string().required('กรุณากรอก cookie'),
+  marker: Yup.string().required('กรุณากรอก marker'),
   subDomain: Yup.string().required('กรุณากรอก sub-domain'),
   filterPasswords: Yup.array().of(Yup.string()).optional(),
 });

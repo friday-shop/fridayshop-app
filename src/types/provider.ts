@@ -5,6 +5,7 @@ export interface IProvider {
   imageUrl?: string;
   isOpen: boolean;
   cookie: string;
+  marker: string;
   subDomain: string;
   filterPasswords: string[];
   createdAt: Date;

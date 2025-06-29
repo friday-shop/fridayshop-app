@@ -77,6 +77,21 @@ export default function ProviderForm({ providerForm }: ProviderFormProps) {
         ) : null}
       </div>
       <div className="form-group">
+        <label htmlFor="marker">marker</label>
+        <input
+          id="marker"
+          name="marker"
+          type="text"
+          className={`form-control${providerForm.touched.marker && providerForm.errors.marker ? ' is-invalid' : ''}`}
+          value={providerForm.values.marker}
+          onChange={providerForm.handleChange}
+          onBlur={providerForm.handleBlur}
+        />
+        {providerForm.touched.marker && providerForm.errors.marker ? (
+          <div className="invalid-feedback">{providerForm.errors.marker}</div>
+        ) : null}
+      </div>
+      <div className="form-group">
         <label>ซับโดเมน</label>
         <select
           name={'subDomain'}
