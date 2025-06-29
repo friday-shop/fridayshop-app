@@ -150,6 +150,9 @@ export default function ProductProviderForm({
               const isExpanded = expandedIndexes.includes(index);
 
               const isVerified = provider.name != '' && provider.price != 0;
+              const matchedProvider = providers.find(
+                (p) => p._id === provider.providerId,
+              );
               return (
                 <div key={index} className="provider-item">
                   <div
@@ -185,8 +188,8 @@ export default function ProductProviderForm({
                       </div>
                       {isVerified && (
                         <img
-                          src={providers?.[index]?.imageUrl}
-                          alt={providers?.[index]?.name}
+                          src={matchedProvider?.imageUrl}
+                          alt={matchedProvider?.name}
                           className="rounded-4"
                           style={{
                             height: '50px',
@@ -204,7 +207,7 @@ export default function ProductProviderForm({
                           }}
                         >
                           {truncateText(
-                            providers?.[index]?.name || 'ไม่ทราบชื่อร้าน',
+                            matchedProvider?.name || 'ไม่ทราบชื่อร้าน',
                             40,
                           )}
                         </span>
