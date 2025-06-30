@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+.git
+.gitignore
+README.md
+*.log
+Dockerfile
+docker-compose.yml
+azure-pipelines.yml
+deployment.yaml
+.vscode
+.idea
+.env

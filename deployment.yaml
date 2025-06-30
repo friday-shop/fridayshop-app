@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fridayshop-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fridayshop-app
+  template:
+    metadata:
+      labels:
+        app: fridayshop-app
+    spec:
+      containers:
+        - name: fridayshop-app
+          image: myacrname.azurecr.io/fridayshop-app:TAG_PLACEHOLDER
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fridayshop-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: fridayshop-app
