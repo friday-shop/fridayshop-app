@@ -49,6 +49,7 @@ const ProviderItem: React.FC<ProviderItemProps> = ({
           imageUrl,
           isOpen,
           cookie,
+          marker,
           subDomain,
           filterPasswords,
         } = values;
@@ -63,6 +64,7 @@ const ProviderItem: React.FC<ProviderItemProps> = ({
             imageUrl,
             isOpen,
             cookie,
+            marker,
             subDomain,
             filterPasswords,
           },
