@@ -21,7 +21,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
   onClickChangeStatus,
 }) => {
   const [isChecking, setIsChecking] = useState(false);
-  const { name, imageUrl, verify, isOpen, point } = providerForm.values;
+  const { name, imageUrl, verify, isOpen, point, marker } = providerForm.values;
   const { errors } = providerForm;
 
   // Memoized validation check
@@ -191,7 +191,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
 
             <div className="flex-grow-1">
               <h5 className="fw-bold text-dark mb-1 lh-sm">
-                {name || 'ไม่ระบุชื่อ'}
+                {name || 'ไม่ระบุชื่อ'} ({marker})
               </h5>
 
               <p className="text-muted mb-2 fw-medium">
