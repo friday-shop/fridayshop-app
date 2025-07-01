@@ -1,5 +1,6 @@
 {
   "name": "fridayshop-app",
+  "homepage": "https://txngjr.github.io/friday-shop/fridayshop-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +8,9 @@
     "dev": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@fontsource/noto-sans-thai": "^5.2.5",
