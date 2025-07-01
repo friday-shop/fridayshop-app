@@ -36,7 +36,7 @@ export default function Login() {
     try {
       const { data } = await axiosInstance.post('/auth/login', values);
       saveToken(data.access_token);
-      navigate('/');
+      navigate('/fridayshop-app/');
     } catch (error) {
       const errorAxios = error as AxiosError<{ message: string }>;
       setServerError(

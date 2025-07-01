@@ -28,13 +28,17 @@ function Layout({ children }: LayoutProps) {
           <h5 className="mb-4 fw-bold text-primary">เมนู</h5>
           <ul className="list-unstyled">
             <li>
-              <Link to="/" onClick={closeSidebar} className="menu-item">
+              <Link
+                to="/fridayshop-app/"
+                onClick={closeSidebar}
+                className="menu-item"
+              >
                 <BsFillInboxesFill className="me-2" /> ประเภทสินค้าที่วางขาย
               </Link>
             </li>
             <li>
               <Link
-                to="/providers"
+                to="/fridayshop-app/providers"
                 onClick={closeSidebar}
                 className="menu-item"
               >
@@ -42,7 +46,11 @@ function Layout({ children }: LayoutProps) {
               </Link>
             </li>
             <li>
-              <Link to="/payment" onClick={closeSidebar} className="menu-item">
+              <Link
+                to="/fridayshop-app/payment"
+                onClick={closeSidebar}
+                className="menu-item"
+              >
                 <BsCurrencyExchange className="me-2" /> ชำระเงิน
               </Link>
             </li>
