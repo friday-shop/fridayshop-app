@@ -14,6 +14,13 @@ import '@fontsource/noto-sans-thai/900.css';
 import './index.css';
 import { AuthProvider } from './contexts/AuthContext.tsx';
 
+const redirect = sessionStorage.redirect;
+delete sessionStorage.redirect;
+
+if (redirect && redirect !== window.location.pathname) {
+  window.history.replaceState(null, '', redirect);
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
