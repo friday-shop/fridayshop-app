@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc -b && vite build",
+    // "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run postbuild",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
