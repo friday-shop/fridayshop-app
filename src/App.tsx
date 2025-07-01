@@ -28,7 +28,7 @@ function App() {
         </Layout>
       ) : (
         <Routes>
-          <Route index element={<Login />} />
+          <Route path="/fridayshop-app/" element={<Login />} />
         </Routes>
       )}
     </>
