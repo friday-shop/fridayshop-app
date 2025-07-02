@@ -4,7 +4,25 @@ import type { IPayment, IPaymentAccount } from '../../types/payment';
 interface PaymentFormProps {
   paymentForm: ReturnType<typeof useFormik<IPayment & IPaymentAccount>>;
 }
-
+const thaiBanks = [
+  'กสิกรไทย',
+  'ไทยพาณิชย์',
+  'กรุงเทพ',
+  'กรุงไทย',
+  'กรุงศรีอยุธยา',
+  'ทหารไทยธนชาต (TTB)',
+  'ออมสิน',
+  'อิสลามแห่งประเทศไทย',
+  'ธกส.',
+  'ยูโอบี',
+  'ซิตี้แบงก์',
+  'แลนด์แอนด์เฮ้าส์',
+  'ไอซีบีซี (ไทย)',
+  'ซีไอเอ็มบี ไทย',
+  'เกียรตินาคินภัทร',
+  'เมกะ สากลพาณิชย์',
+  'ไทยเครดิต',
+];
 export default function PaymentForm({ paymentForm }: PaymentFormProps) {
   return (
     <div
@@ -60,6 +78,47 @@ export default function PaymentForm({ paymentForm }: PaymentFormProps) {
         {paymentForm.touched.phone && paymentForm.errors.phone ? (
           <div className="invalid-feedback">{paymentForm.errors.phone}</div>
         ) : null}
+      </div>
+      <div className="form-group">
+        <label htmlFor="bankNumber">bankNumber</label>
+        <input
+          id="bankNumber"
+          name="bankNumber"
+          type="text"
+          className={`form-control${paymentForm.touched.bankNumber && paymentForm.errors.bankNumber ? ' is-invalid' : ''}`}
+          value={paymentForm.values.bankNumber}
+          onChange={paymentForm.handleChange}
+          onBlur={paymentForm.handleBlur}
+        />
+        {paymentForm.touched.bankNumber && paymentForm.errors.bankNumber ? (
+          <div className="invalid-feedback">
+            {paymentForm.errors.bankNumber}
+          </div>
+        ) : null}
+      </div>
+      <div className="form-group">
+        <label htmlFor="bankProvider">เลือกธนาคาร</label>
+        <select
+          id="bankProvider"
+          name="bankProvider"
+          className={`form-control${paymentForm.touched.bankProvider && paymentForm.errors.bankProvider ? ' is-invalid' : ''}`}
+          value={paymentForm.values.bankProvider}
+          onChange={paymentForm.handleChange}
+          onBlur={paymentForm.handleBlur}
+        >
+          <option value="">-- กรุณาเลือกธนาคาร --</option>
+          {thaiBanks.map((bank) => (
+            <option key={bank} value={bank}>
+              {bank}
+            </option>
+          ))}
+        </select>
+        {paymentForm.touched.bankProvider &&
+          paymentForm.errors.bankProvider && (
+            <div className="invalid-feedback">
+              {paymentForm.errors.bankProvider}
+            </div>
+          )}
       </div>
       <button
         className="rounded-4 border-0 fw-bold"

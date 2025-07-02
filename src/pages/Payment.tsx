@@ -21,6 +21,8 @@ const validationSchema = Yup.object({
   accessToken: Yup.string().required('กรุณากรอก Access Token'),
   name: Yup.string().required('กรุณากรอกชื่อ'),
   phone: Yup.string().required('กรุณากรอกเบอร์โทรศัพท์'),
+  bankNumber: Yup.string().required('กรุณากรอกเลขธนาคาร'),
+  bankProvider: Yup.string().required('กรุณากเลือกธนาคาร'),
 });
 
 const initialValues: IPayment & IPaymentAccount = {
@@ -35,6 +37,8 @@ const initialValues: IPayment & IPaymentAccount = {
   accessToken: '',
   name: '',
   phone: '',
+  bankNumber: '',
+  bankProvider: '',
 };
 
 function Payment() {
@@ -60,11 +64,13 @@ function Payment() {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const { accessToken, name, phone } = values;
+        const { accessToken, name, phone, bankNumber, bankProvider } = values;
         const payment = await axiosInstance.patch('/payments', {
           accessToken,
           name,
           phone,
+          bankNumber,
+          bankProvider,
         });
         paymentForm.setValues(payment.data);
         Swal.fire('Success', 'Category updated successfully!', 'success');

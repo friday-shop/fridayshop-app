@@ -21,4 +21,6 @@ export interface IPayment {
   accessToken: string;
   name: string;
   phone: string;
+  bankNumber: string;
+  bankProvider: string;
 }
