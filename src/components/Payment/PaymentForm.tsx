@@ -32,7 +32,7 @@ export default function PaymentForm({ paymentForm }: PaymentFormProps) {
       }}
     >
       <div className="form-group">
-        <label htmlFor="name">ชื่อประเภท</label>
+        <label htmlFor="name">ชื่อ</label>
         <input
           id="name"
           name="name"
@@ -44,6 +44,21 @@ export default function PaymentForm({ paymentForm }: PaymentFormProps) {
         />
         {paymentForm.touched.name && paymentForm.errors.name ? (
           <div className="invalid-feedback">{paymentForm.errors.name}</div>
+        ) : null}
+      </div>
+      <div className="form-group">
+        <label htmlFor="engName">ชื่อ(อังกฤษ)</label>
+        <input
+          id="engName"
+          name="engName"
+          type="text"
+          className={`form-control${paymentForm.touched.engName && paymentForm.errors.engName ? ' is-invalid' : ''}`}
+          value={paymentForm.values.engName}
+          onChange={paymentForm.handleChange}
+          onBlur={paymentForm.handleBlur}
+        />
+        {paymentForm.touched.engName && paymentForm.errors.engName ? (
+          <div className="invalid-feedback">{paymentForm.errors.engName}</div>
         ) : null}
       </div>
 

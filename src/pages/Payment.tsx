@@ -20,6 +20,7 @@ const validationSchema = Yup.object({
   checkSlipByCredit: Yup.boolean(),
   accessToken: Yup.string().required('กรุณากรอก Access Token'),
   name: Yup.string().required('กรุณากรอกชื่อ'),
+  engName: Yup.string().required('กรุณากรอกชื่อ อังกฤษ'),
   phone: Yup.string().required('กรุณากรอกเบอร์โทรศัพท์'),
   bankNumber: Yup.string().required('กรุณากรอกเลขธนาคาร'),
   bankProvider: Yup.string().required('กรุณากเลือกธนาคาร'),
@@ -36,6 +37,7 @@ const initialValues: IPayment & IPaymentAccount = {
   checkSlipByCredit: false,
   accessToken: '',
   name: '',
+  engName: '',
   phone: '',
   bankNumber: '',
   bankProvider: '',
@@ -64,10 +66,12 @@ function Payment() {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const { accessToken, name, phone, bankNumber, bankProvider } = values;
+        const { accessToken, name, phone, bankNumber, bankProvider, engName } =
+          values;
         const payment = await axiosInstance.patch('/payments', {
           accessToken,
           name,
+          engName,
           phone,
           bankNumber,
           bankProvider,

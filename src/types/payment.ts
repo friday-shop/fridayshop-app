@@ -20,6 +20,7 @@ export interface IPaymentAccount {
 export interface IPayment {
   accessToken: string;
   name: string;
+  engName: string;
   phone: string;
   bankNumber: string;
   bankProvider: string;
