@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
 import type { ICategory } from '../../types/category';
+import ImagesForm from '../ImagesForm/ImagesForm';
 
 interface CategoryFormProps {
   categoryForm: ReturnType<typeof useFormik<ICategory>>;
@@ -124,6 +125,7 @@ export default function CategoryForm({ categoryForm }: CategoryFormProps) {
           </div>
         ) : null}
       </div>
+      <ImagesForm formik={categoryForm} fieldName="imagesWarrningUrl" />
     </div>
   );
 }

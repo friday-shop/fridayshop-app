@@ -1,0 +1,83 @@
+.image-list-container {
+  border: 1px solid #e9ecef;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.image-item {
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  transition: background-color 0.2s ease;
+}
+
+.image-item:last-child {
+  border-bottom: none;
+}
+
+.image-item:focus-within {
+  background-color: #f8f9fa;
+}
+
+.image-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.image-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1.75rem; /* Alinea los botones con el campo de entrada */
+}
+
+.form-label-sm {
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.btn-delete-image {
+  background: none;
+  border: none;
+  color: #dc3545;
+  padding: 0.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-delete-image:hover {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+.image-preview-container {
+  margin-top: 1rem;
+  text-align: left;
+  padding-left: 4.5rem; /* Espacio para alinear con el input */
+}
+
+.image-preview {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+  object-fit: cover;
+}
+
+.btn-add-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+  border: none;
+}

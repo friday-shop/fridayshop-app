@@ -49,6 +49,7 @@ function Product() {
             expirationDays: 1,
             createdAt: currentDate,
             updatedAt: currentDate,
+            imagesWarrningUrl: [],
           },
           ...prev,
         ]);

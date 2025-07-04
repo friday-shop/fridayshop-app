@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import type { AxiosError } from 'axios';
 import ProductForm from './ProductForm';
 import ProductProviderForm from './ProductProviderForm/ProductProviderForm';
+import ImagesForm from '../ImagesForm/ImagesForm';
 
 interface ProductItemProps {
   initialValues: IProduct;
@@ -34,6 +35,10 @@ const validationSchema = Yup.object({
     }),
   ),
   isOpen: Yup.boolean().required('กรุณาระบุสถานะการเปิดใช้งาน'),
+  imagesWarrningUrl: Yup.array()
+    .of(Yup.string().url('URL ไม่ถูกต้อง'))
+    .optional()
+    .default([]),
 });
 
 const ProductItem: React.FC<ProductItemProps> = ({
@@ -127,6 +132,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           <>
             <ProductForm productForm={productForm} />
             <ProductProviderForm productForm={productForm} />
+            <ImagesForm formik={productForm} fieldName="imagesWarrningUrl" />
           </>
         )}
       </div>
