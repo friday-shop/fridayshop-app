@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       await localStorage.setItem(
-        import.meta.env.VITE_ACCESS_TOKEN_NAME || 'token',
+        import.meta.env.VITE_ACCESS_TOKEN_NAME || 'access_token',
         token,
       );
       const response = await axiosInstance.get('/users/self');
@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       await localStorage.removeItem(
-        import.meta.env.VITE_ACCESS_TOKEN_NAME || 'token',
+        import.meta.env.VITE_ACCESS_TOKEN_NAME || 'access_token',
       );
       setData(null);
     } catch (error) {
