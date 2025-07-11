@@ -61,7 +61,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
           onClick={(event) => {
             if (!preview) {
               event.stopPropagation();
-              navigate(`/fridayshop-app/products/${_id}`);
+              navigate(`/products/${_id}`);
             }
           }}
         >

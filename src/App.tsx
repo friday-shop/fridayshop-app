@@ -14,21 +14,15 @@ function App() {
       {user?.data ? (
         <Layout>
           <Routes>
-            <Route path="/fridayshop-app/" element={<CategoryList />} />
-            <Route
-              path="/fridayshop-app/products/:categoryId"
-              element={<ProductList />}
-            />
-            <Route
-              path="/fridayshop-app/providers"
-              element={<ProviderList />}
-            />
-            <Route path="/fridayshop-app/payment" element={<Payment />} />
+            <Route path="/" element={<CategoryList />} />
+            <Route path="/products/:categoryId" element={<ProductList />} />
+            <Route path="/providers" element={<ProviderList />} />
+            <Route path="/payment" element={<Payment />} />
           </Routes>
         </Layout>
       ) : (
         <Routes>
-          <Route path="/fridayshop-app/" element={<Login />} />
+          <Route path="/" element={<Login />} />
         </Routes>
       )}
     </>
