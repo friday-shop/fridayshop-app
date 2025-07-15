@@ -46,6 +46,16 @@ function Layout({ children }: LayoutProps) {
                 <BsCurrencyExchange className="me-2" /> ชำระเงิน
               </Link>
             </li>
+            <li>
+              <Link to="/incomes" onClick={closeSidebar} className="menu-item">
+                <BsCurrencyExchange className="me-2" /> บัญชีรายรับ
+              </Link>
+            </li>
+            <li>
+              <Link to="/expenses" onClick={closeSidebar} className="menu-item">
+                <BsCurrencyExchange className="me-2" /> บัญชีรายจ่าย
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

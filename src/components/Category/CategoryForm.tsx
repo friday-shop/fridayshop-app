@@ -125,7 +125,7 @@ export default function CategoryForm({ categoryForm }: CategoryFormProps) {
           </div>
         ) : null}
       </div>
-      <ImagesForm formik={categoryForm} fieldName="imagesWarrningUrl" />
+      <ImagesForm formik={categoryForm} fieldName="imagesWarningUrl" />
     </div>
   );
 }

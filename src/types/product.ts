@@ -17,7 +17,7 @@ export interface IProduct {
   purchasable?: number;
   quantity?: number;
   expirationDays: number;
-  imagesWarrningUrl?: string[];
+  imagesWarningUrl?: string[];
 }
 
 export interface IProductProviderResponse extends IProductProvider {

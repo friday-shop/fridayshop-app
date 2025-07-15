@@ -26,7 +26,7 @@ const validationSchema = Yup.object({
   isOpen: Yup.boolean().required('กรุณาระบุสถานะการเปิดใช้งาน'),
   isUseForm: Yup.boolean().required('กรุณาระบุการใช้งานฟอร์ม'),
   formFormat: Yup.string().optional(),
-  imagesWarrningUrl: Yup.array()
+  imagesWarningUrl: Yup.array()
     .of(Yup.string().url('URL ไม่ถูกต้อง'))
     .optional()
     .default([]),

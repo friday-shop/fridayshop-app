@@ -35,7 +35,7 @@ const validationSchema = Yup.object({
     }),
   ),
   isOpen: Yup.boolean().required('กรุณาระบุสถานะการเปิดใช้งาน'),
-  imagesWarrningUrl: Yup.array()
+  imagesWarningUrl: Yup.array()
     .of(Yup.string().url('URL ไม่ถูกต้อง'))
     .optional()
     .default([]),
@@ -132,7 +132,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           <>
             <ProductForm productForm={productForm} />
             <ProductProviderForm productForm={productForm} />
-            <ImagesForm formik={productForm} fieldName="imagesWarrningUrl" />
+            <ImagesForm formik={productForm} fieldName="imagesWarningUrl" />
           </>
         )}
       </div>

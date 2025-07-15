@@ -8,5 +8,5 @@ export interface ICategory {
   formFormat?: string;
   createdAt: Date;
   updatedAt: Date;
-  imagesWarrningUrl?: string[];
+  imagesWarningUrl?: string[];
 }

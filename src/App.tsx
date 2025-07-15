@@ -6,6 +6,8 @@ import ProviderList from './pages/ProviderList';
 import Payment from './pages/Payment';
 import Login from './pages/Login';
 import useUser from './hooks/useUser';
+import IncomeList from './pages/IncomeList';
+import ExpensesList from './pages/ExpenseList';
 
 function App() {
   const user = useUser();
@@ -18,6 +20,8 @@ function App() {
             <Route path="/products/:categoryId" element={<ProductList />} />
             <Route path="/providers" element={<ProviderList />} />
             <Route path="/payment" element={<Payment />} />
+            <Route path="/incomes" element={<IncomeList />} />
+            <Route path="/expenses" element={<ExpensesList />} />
           </Routes>
         </Layout>
       ) : (

@@ -36,7 +36,7 @@ function Category() {
             formFormat: '',
             createdAt: currentDate,
             updatedAt: currentDate,
-            imagesWarrningUrl: [],
+            imagesWarningUrl: [],
           },
           ...prev,
         ]);
