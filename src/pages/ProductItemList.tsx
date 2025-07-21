@@ -1,21 +1,24 @@
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import type { ICategory } from '../types/category';
+import type { IProductItem } from '../types/product-item';
 import { axiosInstance } from '../hooks/useAxios';
 import { useLayoutStore } from '../store/useLayoutStore';
 import type { HttpResponsePagination } from '../types/global';
-import CategoryItem from '../components/Category/CategoryItem';
+import { useParams } from 'react-router-dom';
+import type { IProduct } from '../types/product';
+import ProductItemItem from '../components/ProductItem/ProductItemItem';
 
 const PER_PAGE = Number(import.meta.env.VITE_PER_PAGE) || 5;
 
-function Category() {
+function ProductItem() {
+  const { productId } = useParams<{ productId: string }>();
   const { search, setTitle } = useLayoutStore();
   const [page, setPage] = useState(1);
-  const [newCategories, setNewCategories] = useState<ICategory[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [newProductItems, setNewProductItems] = useState<IProductItem[]>([]);
+  const [productItems, setProductItems] = useState<IProductItem[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
-  const [data, setData] = useState<HttpResponsePagination<ICategory> | null>(
+  const [data, setData] = useState<HttpResponsePagination<IProductItem> | null>(
     null,
   );
   const [error, setError] = useState<unknown>(null);
@@ -25,18 +28,30 @@ function Category() {
     useLayoutStore.setState({
       onCreate: () => {
         const currentDate = new Date();
-        setNewCategories((prev) => [
+        setNewProductItems((prev) => [
           {
             _id: currentDate.toString(),
-            name: '',
-            description: '',
-            imageUrl: '',
             isOpen: false,
-            isUseForm: false,
-            formFormat: '',
+            name: '',
+            price: 0,
+            imageUrl: '',
+            providers: [
+              {
+                id: '',
+                providerId: '',
+                isOpen: true,
+                name: '',
+                price: 0,
+                quantity: 0,
+              },
+            ],
+            expirationDays: 1,
             createdAt: currentDate,
             updatedAt: currentDate,
             imagesWarningUrl: [],
+            isDiscount: false,
+            discount: 0,
+            productId: productId!,
             sortOrder: 0,
           },
           ...prev,
@@ -50,7 +65,7 @@ function Category() {
       setIsLoading(true);
       try {
         const response = await axiosInstance.get(
-          `/categories?page=${page}&perPage=${PER_PAGE}&search=${search}`,
+          `/product-items?page=${page}&perPage=${PER_PAGE}&productId=${productId || ''}`,
         );
         setData(response.data);
         setError(null);
@@ -65,15 +80,30 @@ function Category() {
   }, [page, search]);
 
   useEffect(() => {
-    setTitle('ประเภทสินค้าที่วางขาย');
-  }, [setTitle]);
+    const fetchProduct = async () => {
+      if (productId) {
+        try {
+          const response = await axiosInstance.get<IProduct>(
+            `/products/${productId}`,
+          );
+          setTitle(response.data?.name);
+        } catch (error) {
+          console.error('Error fetching product:', error);
+        }
+      }
+    };
+    fetchProduct();
+  }, [setTitle, productId]);
 
   useEffect(() => {
     if (data?.data) {
       if (page === 1) {
-        setCategories(data.data);
+        setProductItems(data.data);
       } else {
-        setCategories((prevCategories) => [...prevCategories, ...data.data]);
+        setProductItems((prevProductItems) => [
+          ...prevProductItems,
+          ...data.data,
+        ]);
       }
 
       setHasMore(data.page * data.perPage < data.total);
@@ -90,10 +120,10 @@ function Category() {
     setIsLoading(true);
     try {
       const response = await axiosInstance.get(
-        `/categories?page=${page}&perPage=${PER_PAGE}&search=${search}`,
+        `/product-items?page=${page}&perPage=${PER_PAGE}&productId=${productId || ''}`,
       );
       setData(response.data);
-      setCategories(response.data.data);
+      setProductItems(response.data.data);
       setPage(1);
       setHasMore(
         response.data.page * response.data.perPage < response.data.total,
@@ -121,7 +151,7 @@ function Category() {
   return (
     <div className="container py-4">
       <InfiniteScroll
-        dataLength={categories.length}
+        dataLength={productItems.length}
         next={fetchMoreData}
         hasMore={hasMore}
         loader={
@@ -149,24 +179,28 @@ function Category() {
         }
       >
         <div className="row g-4">
-          {newCategories.map((category) => (
-            <div key={category._id} className="col-md-6 col-12">
-              <CategoryItem
-                initialValues={category}
+          {newProductItems.map((productItem) => (
+            <div key={productItem._id} className="col-md-6 col-12">
+              <ProductItemItem
+                initialValues={productItem}
                 mutate={refreshData}
                 onDelete={() => {
-                  setNewCategories((prev) =>
+                  setNewProductItems((prev) =>
                     prev.filter(
-                      (newCategory) => newCategory._id !== category._id,
+                      (newProductItem) =>
+                        newProductItem._id !== productItem._id,
                     ),
                   );
                 }}
               />
             </div>
           ))}
-          {categories.map((category) => (
-            <div key={category._id} className="col-md-6 col-12">
-              <CategoryItem initialValues={category} mutate={refreshData} />
+          {productItems.map((productItem) => (
+            <div key={productItem._id} className="col-md-6 col-12">
+              <ProductItemItem
+                initialValues={productItem}
+                mutate={refreshData}
+              />
             </div>
           ))}
         </div>
@@ -175,4 +209,4 @@ function Category() {
   );
 }
 
-export default Category;
+export default ProductItem;

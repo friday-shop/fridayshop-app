@@ -1,29 +1,24 @@
 import React from 'react';
-import truncateText from '../../utils/truncateText';
-import type { ICategory } from '../../types/category';
 import unknownImage from '../../assets/images/unknown.png';
 import Toggle from '../Toggle';
-import { useNavigate } from 'react-router-dom';
+import type { IProductItem } from '../../types/product-item';
 
-interface CategoryCardProps {
-  data: ICategory;
+interface ProductItemCardProps {
+  data: IProductItem;
   isEdit: boolean;
   onClickImage: () => void;
   onClickCard: () => void;
   onClickChangeStatus: () => void;
-  preview?: boolean;
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = ({
+const ProductItemCard: React.FC<ProductItemCardProps> = ({
   data,
   isEdit,
   onClickImage,
   onClickCard,
   onClickChangeStatus,
-  preview = false,
 }) => {
-  const { _id, name, description, imageUrl } = data;
-  const navigate = useNavigate();
+  const { name, purchasable, price, imageUrl, quantity } = data;
 
   return (
     <div
@@ -108,22 +103,21 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
       </div>
       <div className="card-body text-primary">
         <h5 className="card-title fw-bolder">{name}</h5>
-        <p className="card-text text-muted">{truncateText(description, 75)}</p>
+        <p className="card-text text-muted">
+          ราคา {price} บาท <br />
+          สินค้าคงเหลือ {quantity || 0} ชิ้น
+          <br />
+          สามารถซื้อได้ {purchasable || 0} ชิ้น
+        </p>
         <button
           className="btn fw-bold rounded px-4 border-0 w-100"
           style={{ backgroundColor: '#876DFD', color: 'white' }}
-          onClick={(event) => {
-            if (!preview) {
-              event.stopPropagation();
-              navigate(`/products/${_id}`);
-            }
-          }}
         >
-          ดูรายการหมวดหมู่
+          ซื้อสินค้า
         </button>
       </div>
     </div>
   );
 };
 
-export default CategoryCard;
+export default ProductItemCard;

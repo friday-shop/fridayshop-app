@@ -7,8 +7,7 @@ import { axiosInstance } from '../../hooks/useAxios';
 import Swal from 'sweetalert2';
 import type { AxiosError } from 'axios';
 import ProductForm from './ProductForm';
-import ProductProviderForm from './ProductProviderForm/ProductProviderForm';
-import ImagesForm from '../ImagesForm/ImagesForm';
+import { uploadImage } from '../../utils/uploadImage';
 
 interface ProductItemProps {
   initialValues: IProduct;
@@ -17,28 +16,24 @@ interface ProductItemProps {
 }
 const validationSchema = Yup.object({
   name: Yup.string()
-    .min(4, 'ชื่อสินค้าต้องมีอย่างน้อย 4 ตัวอักษร')
-    .max(100, 'ชื่อสินค้าต้องไม่เกิน 100 ตัวอักษร')
-    .required('กรุณากรอกชื่อสินค้า'),
-  price: Yup.number().typeError('ราคาต้องเป็นตัวเลข').required('กรุณากรอกราคา'),
-  expirationDays: Yup.number()
-    .typeError('วันหมดอายุต้องเป็นตัวเลข')
-    .required('กรุณากรอกวันหมดอายุ'),
-  imageUrl: Yup.string().url('URL ไม่ถูกต้อง').notRequired(),
-  providers: Yup.array().of(
-    Yup.object({
-      providerId: Yup.string().required('กรุณากรอก Provider ID'),
-      id: Yup.string().required('กรุณากรอก ID'),
-      isOpen: Yup.boolean().required('กรุณาระบุ isOpen'),
-      name: Yup.string().required('กรุณาระบุชื่อสินค้า'),
-      price: Yup.number().min(0, 'ราคาต้องไม่ติดลบ').required('กรุณาระบุราคา'),
-    }),
-  ),
+    .min(4, 'ชื่อประเภทต้องมีอย่างน้อย 4 ตัวอักษร')
+    .max(100, 'ชื่อประเภทต้องไม่เกิน 100 ตัวอักษร')
+    .required('กรุณากรอกชื่อประเภท'),
+  description: Yup.string()
+    .min(4, 'รายละเอียดต้องมีอย่างน้อย 4 ตัวอักษร')
+    .max(1000, 'รายละเอียดต้องไม่เกิน 1000 ตัวอักษร')
+    .required('กรุณากรอกรายละเอียด'),
+  imageUrl: Yup.string().url('URL ไม่ถูกต้อง').required('กรุณากรอก URL รูปภาพ'),
   isOpen: Yup.boolean().required('กรุณาระบุสถานะการเปิดใช้งาน'),
+  isUseForm: Yup.boolean().required('กรุณาระบุการใช้งานฟอร์ม'),
+  formFormat: Yup.string().optional(),
   imagesWarningUrl: Yup.array()
     .of(Yup.string().url('URL ไม่ถูกต้อง'))
     .optional()
     .default([]),
+  sortOrder: Yup.number()
+    .min(0, 'ลำดับต้องเป็นตัวเลขที่ไม่ติดลบ')
+    .required('กรุณาระบุลำดับ'),
 });
 
 const ProductItem: React.FC<ProductItemProps> = ({
@@ -73,8 +68,13 @@ const ProductItem: React.FC<ProductItemProps> = ({
   return (
     <div>
       <ProductCard
+        preview={!isUpdate}
         data={productForm.values}
         isEdit={isEdit}
+        onClickImage={async () => {
+          const url = await uploadImage('common');
+          productForm.setFieldValue('imageUrl', url);
+        }}
         onClickCard={() => {
           setSelected((prev) => !prev);
           setIsEdit(false);
@@ -83,8 +83,8 @@ const ProductItem: React.FC<ProductItemProps> = ({
           if (isUpdate) {
             const isCurrentlyOpen = productForm.values.isOpen;
             const result = await Swal.fire({
-              title: `ยืนยันการ${isCurrentlyOpen ? 'ปิด' : 'เปิด'}สินค้า?`,
-              text: `คุณแน่ใจว่าต้องการ${isCurrentlyOpen ? 'ปิด' : 'เปิด'}ใช้งานสินค้านี้?`,
+              title: `ยืนยันการ${isCurrentlyOpen ? 'ปิด' : 'เปิด'}หมวดหมู่?`,
+              text: `คุณแน่ใจว่าต้องการ${isCurrentlyOpen ? 'ปิด' : 'เปิด'}ใช้งานหมวดหมู่นี้?`,
               icon: 'warning',
               showCancelButton: true,
               confirmButtonColor: isCurrentlyOpen ? '#FE5C73' : '#3085d6',
@@ -103,7 +103,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
                 Swal.fire(
                   'สำเร็จ!',
-                  `${isCurrentlyOpen ? 'ปิด' : 'เปิด'}ใช้งานสินค้าเรียบร้อยแล้ว`,
+                  `${isCurrentlyOpen ? 'ปิด' : 'เปิด'}ใช้งานหมวดหมู่เรียบร้อยแล้ว`,
                   'success',
                 );
               } catch (error) {
@@ -128,13 +128,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           transition: 'max-height 0.5s ease-in-out',
         }}
       >
-        {selected && isEdit && (
-          <>
-            <ProductForm productForm={productForm} />
-            <ProductProviderForm productForm={productForm} />
-            <ImagesForm formik={productForm} fieldName="imagesWarningUrl" />
-          </>
-        )}
+        {selected && isEdit && <ProductForm productForm={productForm} />}
       </div>
       <div
         className={`animated-buttons ${selected ? 'slide-down' : ''}`}
@@ -174,7 +168,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               onClick={async () => {
                 const result = await Swal.fire({
                   title: 'ยืนยันการลบ?',
-                  text: 'คุณแน่ใจว่าต้องการลบสินค้านี้?',
+                  text: 'คุณแน่ใจว่าต้องการลบหมวดหมู่นี้?',
                   icon: 'warning',
                   showCancelButton: true,
                   confirmButtonColor: '#FE5C73',
@@ -193,7 +187,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                     } else {
                       if (onDelete) onDelete();
                     }
-                    Swal.fire('Deleted!', 'ลบสินค้าสำเร็จ', 'success');
+                    Swal.fire('Deleted!', 'ลบหมวดหมู่สำเร็จ', 'success');
                   } catch (error) {
                     const axiosError = error as AxiosError;
                     Swal.fire(

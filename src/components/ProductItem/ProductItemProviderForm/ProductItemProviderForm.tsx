@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import './ProductProviderForm.css';
+import './ProductItemProviderForm.css';
 import {
   BsChevronDown,
   BsChevronUp,
@@ -9,23 +9,23 @@ import {
   BsFillCaretDownFill,
   BsFillCaretUpFill,
 } from 'react-icons/bs';
-import type {
-  IProduct,
-  IProductProviderResponse,
-} from '../../../types/product';
-import type { IProvider, IProviderProduct } from '../../../types/provider';
 import { axiosInstance } from '../../../hooks/useAxios';
 import type { HttpResponsePagination } from '../../../types/global';
 import Swal from 'sweetalert2';
 import truncateText from '../../../utils/truncateText';
+import type {
+  IProductItem,
+  IProductItemProviderResponse,
+} from '../../../types/product-item';
+import type { IProvider } from '../../../types/provider';
 
-interface ProductProviderFormProps {
-  productForm: ReturnType<typeof useFormik<IProduct>>;
+interface ProductItemProviderFormProps {
+  productItemForm: ReturnType<typeof useFormik<IProductItem>>;
 }
 
-export default function ProductProviderForm({
-  productForm,
-}: ProductProviderFormProps) {
+export default function ProductItemProviderForm({
+  productItemForm,
+}: ProductItemProviderFormProps) {
   const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
   const [providers, setProviders] = useState<IProvider[]>([]);
 
@@ -51,20 +51,20 @@ export default function ProductProviderForm({
   };
 
   const removeProvider = (index: number) => {
-    const updated = [...productForm.values.providers];
+    const updated = [...productItemForm.values.providers];
     updated.splice(index, 1);
-    productForm.setFieldValue('providers', updated);
+    productItemForm.setFieldValue('providers', updated);
     setExpandedIndexes((prev) => prev.filter((i) => i !== index));
   };
 
-  const handleCheckProductProvider = async (
-    provider: IProductProviderResponse,
+  const handleCheckProductItemProvider = async (
+    provider: IProductItemProviderResponse,
     index: number,
   ) => {
     const providerId = provider.providerId;
-    const productId = provider.id;
+    const productItemId = provider.id;
 
-    if (!providerId || !productId) {
+    if (!providerId || !productItemId) {
       await Swal.fire({
         icon: 'warning',
         title: 'ข้อมูลไม่ครบถ้วน',
@@ -75,27 +75,33 @@ export default function ProductProviderForm({
     }
 
     try {
-      const response = await axiosInstance.post<IProviderProduct>(
-        `/providers/check-product/${providerId}`,
+      const response = await axiosInstance.post<IProductItemProviderResponse>(
+        `/providers/check-product-items/${providerId}`,
         {
-          productId,
+          productItemId,
         },
       );
 
       const data = response.data;
 
-      productForm.setFieldValue(`providers[${index}].name`, data.name || '');
-      productForm.setFieldValue(`providers[${index}].price`, data.price || 0);
-      productForm.setFieldValue(
+      productItemForm.setFieldValue(
+        `providers[${index}].name`,
+        data.name || '',
+      );
+      productItemForm.setFieldValue(
+        `providers[${index}].price`,
+        data.price || 0,
+      );
+      productItemForm.setFieldValue(
         `providers[${index}].quantity`,
         data.quantity || 0,
       );
-      productForm.setFieldValue(
+      productItemForm.setFieldValue(
         `providers[${index}].purchasable`,
         data.purchasable || 0,
       );
     } catch (error) {
-      console.error('Error checking product provider:', error);
+      console.error('Error checking productItem provider:', error);
       await Swal.fire({
         icon: 'error',
         title: 'เกิดข้อผิดพลาด',
@@ -107,16 +113,16 @@ export default function ProductProviderForm({
 
   const moveProviderUp = (index: number) => {
     if (index === 0) return;
-    const updated = [...productForm.values.providers];
+    const updated = [...productItemForm.values.providers];
     [updated[index - 1], updated[index]] = [updated[index], updated[index - 1]];
-    productForm.setFieldValue('providers', updated);
+    productItemForm.setFieldValue('providers', updated);
   };
 
   const moveProviderDown = (index: number) => {
-    if (index === productForm.values.providers.length - 1) return;
-    const updated = [...productForm.values.providers];
+    if (index === productItemForm.values.providers.length - 1) return;
+    const updated = [...productItemForm.values.providers];
     [updated[index], updated[index + 1]] = [updated[index + 1], updated[index]];
-    productForm.setFieldValue('providers', updated);
+    productItemForm.setFieldValue('providers', updated);
   };
 
   const handleProviderSelectChange = (
@@ -124,15 +130,15 @@ export default function ProductProviderForm({
     index: number,
   ) => {
     const selectedProviderId = event.target.value;
-    productForm.setFieldValue(
+    productItemForm.setFieldValue(
       `providers[${index}].providerId`,
       selectedProviderId,
     );
 
-    productForm.setFieldValue(`providers[${index}].name`, '');
-    productForm.setFieldValue(`providers[${index}].price`, 0);
-    productForm.setFieldValue(`providers[${index}].quantity`, 0);
-    productForm.setFieldValue(`providers[${index}].purchasable`, 0);
+    productItemForm.setFieldValue(`providers[${index}].name`, '');
+    productItemForm.setFieldValue(`providers[${index}].price`, 0);
+    productItemForm.setFieldValue(`providers[${index}].quantity`, 0);
+    productItemForm.setFieldValue(`providers[${index}].purchasable`, 0);
   };
 
   return (
@@ -146,7 +152,7 @@ export default function ProductProviderForm({
         <div className="form-group">
           <label className="mb-2">ตัวแทนจำหน่าย</label>
           <div className="provider-list-container">
-            {productForm.values.providers?.map((provider, index) => {
+            {productItemForm.values.providers?.map((provider, index) => {
               const isExpanded = expandedIndexes.includes(index);
 
               const isVerified = provider.name != '' && provider.price != 0;
@@ -180,7 +186,8 @@ export default function ProductProviderForm({
                             moveProviderDown(index);
                           }}
                           disabled={
-                            index === productForm.values.providers.length - 1
+                            index ===
+                            productItemForm.values.providers.length - 1
                           }
                         >
                           <BsFillCaretDownFill size={16} />
@@ -228,7 +235,7 @@ export default function ProductProviderForm({
                         className="btn-check-provider"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleCheckProductProvider(provider, index);
+                          handleCheckProductItemProvider(provider, index);
                         }}
                       >
                         <BsCheckCircleFill
@@ -277,7 +284,7 @@ export default function ProductProviderForm({
                           name={`providers[${index}].isOpen`}
                           className="form-check-input"
                           checked={provider.isOpen}
-                          onChange={productForm.handleChange}
+                          onChange={productItemForm.handleChange}
                         />
                         <label className="form-check-label">เปิดใช้งาน</label>
                       </div>
@@ -307,21 +314,21 @@ export default function ProductProviderForm({
                           className="form-control"
                           value={provider.id || ''}
                           onChange={(event) => {
-                            productForm.handleChange(event);
+                            productItemForm.handleChange(event);
 
-                            productForm.setFieldValue(
+                            productItemForm.setFieldValue(
                               `providers[${index}].name`,
                               '',
                             );
-                            productForm.setFieldValue(
+                            productItemForm.setFieldValue(
                               `providers[${index}].price`,
                               0,
                             );
-                            productForm.setFieldValue(
+                            productItemForm.setFieldValue(
                               `providers[${index}].quantity`,
                               0,
                             );
-                            productForm.setFieldValue(
+                            productItemForm.setFieldValue(
                               `providers[${index}].purchasable`,
                               0,
                             );
@@ -339,8 +346,8 @@ export default function ProductProviderForm({
             type="button"
             className="btn btn-primary btn-add-provider"
             onClick={() =>
-              productForm.setFieldValue('providers', [
-                ...(productForm.values.providers || []),
+              productItemForm.setFieldValue('providers', [
+                ...(productItemForm.values.providers || []),
                 {
                   id: '',
                   providerId: '',

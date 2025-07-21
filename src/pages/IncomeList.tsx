@@ -4,7 +4,6 @@ import { axiosInstance } from '../hooks/useAxios';
 import { useLayoutStore } from '../store/useLayoutStore';
 import type { HttpResponsePagination } from '../types/global';
 import type { IIncome } from '../types/income';
-import { GrTextAlignCenter } from 'react-icons/gr';
 
 const PER_PAGE = Number(import.meta.env.VITE_PER_PAGE) || 5;
 
@@ -169,10 +168,10 @@ function IncomeList() {
               month: 'short',
               year: 'numeric',
             });
-            const time = new Date(income.date).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            });
+            // const time = new Date(income.date).toLocaleTimeString([], {
+            //   hour: '2-digit',
+            //   minute: '2-digit',
+            // });
 
             return (
               <div

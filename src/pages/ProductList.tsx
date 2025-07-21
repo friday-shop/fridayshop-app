@@ -10,7 +10,7 @@ import type { ICategory } from '../types/category';
 
 const PER_PAGE = Number(import.meta.env.VITE_PER_PAGE) || 5;
 
-function Product() {
+function ProductList() {
   const { categoryId } = useParams<{ categoryId: string }>();
   const { search, setTitle } = useLayoutStore();
   const [page, setPage] = useState(1);
@@ -31,25 +31,17 @@ function Product() {
         setNewProducts((prev) => [
           {
             _id: currentDate.toString(),
-            isOpen: false,
             categoryId: categoryId!,
             name: '',
-            price: 0,
+            description: '',
             imageUrl: '',
-            providers: [
-              {
-                id: '',
-                providerId: '',
-                isOpen: true,
-                name: '',
-                price: 0,
-                quantity: 0,
-              },
-            ],
-            expirationDays: 1,
+            isOpen: false,
+            isUseForm: false,
+            formFormat: '',
+            imagesWarningUrl: [],
+            sortOrder: 0,
             createdAt: currentDate,
             updatedAt: currentDate,
-            imagesWarningUrl: [],
           },
           ...prev,
         ]);
@@ -62,7 +54,7 @@ function Product() {
       setIsLoading(true);
       try {
         const response = await axiosInstance.get(
-          `/products?page=${page}&perPage=${PER_PAGE}&categoryId=${categoryId || ''}`,
+          `/products?page=${page}&perPage=${PER_PAGE}&search=${search}&categoryId=${categoryId || ''}`,
         );
         setData(response.data);
         setError(null);
@@ -85,7 +77,7 @@ function Product() {
           );
           setTitle(response.data?.name);
         } catch (error) {
-          console.error('Error fetching category:', error);
+          console.error('Error fetching product:', error);
         }
       }
     };
@@ -114,7 +106,7 @@ function Product() {
     setIsLoading(true);
     try {
       const response = await axiosInstance.get(
-        `/products?page=${page}&perPage=${PER_PAGE}&categoryId=${categoryId || ''}`,
+        `/products?page=${page}&perPage=${PER_PAGE}&search=${search}&categoryId=${categoryId || ''}`,
       );
       setData(response.data);
       setProducts(response.data.data);
@@ -197,4 +189,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default ProductList;
