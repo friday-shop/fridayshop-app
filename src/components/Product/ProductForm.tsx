@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import type { IProduct } from '../../types/product';
 import ImagesForm from '../ImagesForm/ImagesForm';
+import TagInput from '../TagInput/TagInput';
 
 interface ProductFormProps {
   productForm: ReturnType<typeof useFormik<IProduct>>;
@@ -108,6 +109,12 @@ export default function ProductForm({ productForm }: ProductFormProps) {
         label="รูปภาพเตือน"
         formik={productForm}
         fieldName="imagesWarningUrl"
+      />
+      <TagInput
+        label="รายการคำที่เกี่ยวข้อง"
+        name="matchList"
+        formik={productForm}
+        placeholder="เพิ่มรายการคำที่เกี่ยวข้อง"
       />
     </div>
   );

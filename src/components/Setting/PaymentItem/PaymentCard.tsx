@@ -53,7 +53,10 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
             <div className="col-md-6 text-center text-md-start">
               <p className="mb-2">แพ็กเกจที่เลือก : {packageData}</p>
               <p className="mb-2">วันหมดอายุ : {packageExpiredDate}</p>
-              <p className="mb-2">ต่ออายุอัตโนมัติ : {autoRenewalPackage}</p>
+              <p className="mb-2">
+                ต่ออายุอัตโนมัติ :{' '}
+                {autoRenewalPackage ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
+              </p>
             </div>
             <div className="col-md-6 text-center text-md-start">
               <p className="mb-2">เครดิตคงเหลือในระบบ : {creditRemaining}</p>

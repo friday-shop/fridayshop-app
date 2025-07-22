@@ -42,6 +42,7 @@ function ProductList() {
             sortOrder: 0,
             createdAt: currentDate,
             updatedAt: currentDate,
+            matchList: [],
           },
           ...prev,
         ]);

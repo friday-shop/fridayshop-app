@@ -11,4 +11,5 @@ export interface IProduct {
   sortOrder: number;
   createdAt: Date;
   updatedAt: Date;
+  matchList?: string[];
 }

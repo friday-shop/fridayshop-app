@@ -178,7 +178,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
                 }}
               />
               {/* Verification badge */}
-              {point && point > 0 && (
+              {(point || 0) > 0 && (
                 <div
                   className="position-absolute bg-success rounded-circle d-flex align-items-center justify-content-center"
                   style={{

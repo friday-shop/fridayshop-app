@@ -101,13 +101,34 @@ export default function ProviderForm({ providerForm }: ProviderFormProps) {
           ))}
         </select>
       </div>
-      <TagInput
-        label="ตัวกรองรหัสผ่าน"
-        name="filterPasswords"
-        formik={providerForm}
-        placeholder="พิมพ์แล้วกด Enter เพื่อเพิ่ม"
-      />
-
+      <div className="form-group form-check">
+        <input
+          id="isFilterPasswords"
+          name="isFilterPasswords"
+          type="checkbox"
+          className={`form-check-input${providerForm.touched.isFilterPasswords && providerForm.errors.isFilterPasswords ? ' is-invalid' : ''}`}
+          checked={providerForm.values.isFilterPasswords}
+          onChange={providerForm.handleChange}
+          onBlur={providerForm.handleBlur}
+        />
+        <label htmlFor="isFilterPasswords" className="form-check-label">
+          เปิดใช้การกรองรหัสผ่าน
+        </label>
+        {providerForm.touched.isFilterPasswords &&
+        providerForm.errors.isFilterPasswords ? (
+          <div className="invalid-feedback d-block">
+            {providerForm.errors.isFilterPasswords}
+          </div>
+        ) : null}
+      </div>
+      {providerForm.values.isFilterPasswords && (
+        <TagInput
+          label="ตัวกรองรหัสผ่าน"
+          name="filterPasswords"
+          formik={providerForm}
+          placeholder="พิมพ์แล้วกด Enter เพื่อเพิ่ม"
+        />
+      )}
       <div className="form-group form-check">
         <input
           id="isOpen"

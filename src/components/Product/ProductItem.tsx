@@ -34,6 +34,10 @@ const validationSchema = Yup.object({
   sortOrder: Yup.number()
     .min(0, 'ลำดับต้องเป็นตัวเลขที่ไม่ติดลบ')
     .required('กรุณาระบุลำดับ'),
+  matchList: Yup.array()
+    .of(Yup.string().required('รายการที่เกี่ยวข้องต้องเป็นสตริง'))
+    .optional()
+    .default([]),
 });
 
 const ProductItem: React.FC<ProductItemProps> = ({

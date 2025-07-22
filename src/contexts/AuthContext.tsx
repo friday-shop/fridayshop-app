@@ -24,9 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const response = await axiosInstance.get('/users/self');
         setData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
       setLoading(false);
     };
     checkToken();
@@ -41,9 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       );
       const response = await axiosInstance.get('/users/self');
       setData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
     setLoading(false);
   };
 
@@ -54,9 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         import.meta.env.VITE_ACCESS_TOKEN_NAME || 'access_token',
       );
       setData(null);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
     setLoading(false);
   };
 

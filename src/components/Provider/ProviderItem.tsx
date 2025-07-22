@@ -52,6 +52,7 @@ const ProviderItem: React.FC<ProviderItemProps> = ({
           marker,
           subDomain,
           filterPasswords,
+          isFilterPasswords,
         } = values;
         await axiosInstance.request({
           method: isUpdate ? 'patch' : 'post',
@@ -67,6 +68,7 @@ const ProviderItem: React.FC<ProviderItemProps> = ({
             marker,
             subDomain,
             filterPasswords,
+            isFilterPasswords,
           },
         });
         if (mutate) mutate();
