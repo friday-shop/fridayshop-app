@@ -107,7 +107,7 @@ const ProductItemItem: React.FC<ProductItemItemProps> = ({
             if (result.isConfirmed) {
               try {
                 await axiosInstance.patch(
-                  `/productItems/${initialValues._id}`,
+                  `/product-items/${initialValues._id}`,
                   {
                     ...productItemForm.values,
                     isOpen: !isCurrentlyOpen,

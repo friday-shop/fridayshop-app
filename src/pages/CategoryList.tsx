@@ -24,10 +24,11 @@ function Category() {
   useEffect(() => {
     useLayoutStore.setState({
       onCreate: () => {
-        const currentDate = new Date();
+        const currentTime = new Date().toISOString();
+        const currentDate = new Date(currentTime);
         setNewCategories((prev) => [
           {
-            _id: currentDate.toString(),
+            _id: `new-${Date.now()}`,
             name: '',
             description: '',
             imageUrl: '',
@@ -37,13 +38,13 @@ function Category() {
             createdAt: currentDate,
             updatedAt: currentDate,
             imagesWarningUrl: [],
-            sortOrder: 0,
+            sortOrder: categories.length + newCategories.length + 1,
           },
           ...prev,
         ]);
       },
     });
-  }, []);
+  }, [categories, newCategories]);
 
   useEffect(() => {
     const fetchData = async () => {

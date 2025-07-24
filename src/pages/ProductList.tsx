@@ -27,7 +27,9 @@ function ProductList() {
   useEffect(() => {
     useLayoutStore.setState({
       onCreate: () => {
-        const currentDate = new Date();
+        const currentTime = new Date().toISOString();
+        const currentDate = new Date(currentTime);
+
         setNewProducts((prev) => [
           {
             _id: currentDate.toString(),
@@ -39,16 +41,16 @@ function ProductList() {
             isUseForm: false,
             formFormat: '',
             imagesWarningUrl: [],
-            sortOrder: 0,
             createdAt: currentDate,
             updatedAt: currentDate,
             matchList: [],
+            sortOrder: products.length + newProducts.length + 1,
           },
           ...prev,
         ]);
       },
     });
-  }, []);
+  }, [categoryId, products, newProducts]);
 
   useEffect(() => {
     const fetchData = async () => {

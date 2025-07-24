@@ -206,26 +206,31 @@ export default function ProductItemProviderForm({
                         />
                       )}
                       <div className="d-flex flex-column">
-                        <span
-                          className="badge text-white rounded-pill px-3 py-1 mb-1"
-                          style={{
-                            fontSize: '0.75rem',
-                            backgroundColor: '#16DBCC',
-                          }}
-                        >
-                          {truncateText(
-                            matchedProvider?.name || 'ไม่ทราบชื่อร้าน',
-                            40,
-                          )}
-                        </span>
+                        <div>
+                          <span
+                            className="badge text-white rounded-pill px-3 py-1 mb-1"
+                            style={{
+                              fontSize: '0.75rem',
+                              backgroundColor: '#16DBCC',
+                            }}
+                          >
+                            {truncateText(
+                              matchedProvider?.name || 'ไม่ทราบชื่อร้าน',
+                              40,
+                            )}
+                          </span>
+                          <span style={{ marginLeft: '8px' }}>
+                            {provider.price} ฿
+                          </span>
+                        </div>
                         <span
                           className="fw-semibold"
                           style={{ fontSize: '0.9rem' }}
                         >
-                          {truncateText(
-                            provider.name || `ตัวแทน #${index + 1}`,
-                            14,
-                          )}
+                          {/* {truncateText( */}
+                          {provider.name || `ตัวแทน #${index + 1}`}
+                          {/* 14,
+                          )} */}
                         </span>
                       </div>
                     </div>
