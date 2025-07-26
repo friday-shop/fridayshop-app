@@ -137,6 +137,29 @@ function ProductItem() {
     }
   };
 
+  const refreshDataWithNewProductItems = async (id: string) => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.get(
+        `/product-items?page=1&perPage=${PER_PAGE}&search=${search}`,
+      );
+      setData(response.data);
+      setProductItems(response.data.data);
+      setNewProductItems((prev) =>
+        prev.filter((productItem) => productItem._id !== id),
+      );
+      setPage(1);
+      setHasMore(
+        response.data.page * response.data.perPage < response.data.total,
+      );
+      setError(null);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (error && page === 1) {
     return (
       <div className="container text-center mt-5">
@@ -184,7 +207,7 @@ function ProductItem() {
             <div key={productItem._id} className="col-md-6 col-12">
               <ProductItemItem
                 initialValues={productItem}
-                mutate={refreshData}
+                mutate={() => refreshDataWithNewProductItems(productItem._id)}
                 onDelete={() => {
                   setNewProductItems((prev) =>
                     prev.filter(

@@ -1,5 +1,4 @@
 export interface IIncome {
-  image: string;
   _id: string;
   date: Date;
   item: string;

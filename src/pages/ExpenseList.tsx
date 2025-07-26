@@ -4,6 +4,7 @@ import { axiosInstance } from '../hooks/useAxios';
 import { useLayoutStore } from '../store/useLayoutStore';
 import type { HttpResponsePagination } from '../types/global';
 import type { IExpense } from '../types/expense';
+import ExpenseTable from '../components/Expense/ExpenseTable';
 
 const PER_PAGE = Number(import.meta.env.VITE_PER_PAGE) || 5;
 
@@ -135,108 +136,7 @@ function ExpensesList() {
         ))}
       </div>
 
-      <InfiniteScroll
-        dataLength={expenses.length}
-        next={fetchMoreData}
-        hasMore={hasMore}
-        loader={
-          <div className="text-center my-3">
-            {isLoading ? 'กำลังโหลด...' : 'กำลังโหลดข้อมูล...'}
-          </div>
-        }
-        endMessage={
-          <p className="text-center my-3">
-            <b>
-              {expenses.length > 0 ? 'คุณดูข้อมูลทั้งหมดแล้ว' : 'ไม่พบข้อมูล'}
-            </b>
-          </p>
-        }
-        refreshFunction={refreshData}
-        pullDownToRefresh
-        pullDownToRefreshThreshold={50}
-        pullDownToRefreshContent={
-          <h3 style={{ textAlign: 'center' }}>&#8595; ดึงลงเพื่อรีเฟรช</h3>
-        }
-        releaseToRefreshContent={
-          <h3 style={{ textAlign: 'center' }}>&#8593; ปล่อยเพื่อรีเฟรช</h3>
-        }
-      >
-        <div className="d-grid gap-2">
-          {expenses.map((expense, index) => {
-            const isEvenRow = index % 2 === 0;
-            const cardBackgroundColor = isEvenRow
-              ? 'bg-white'
-              : 'bg-danger bg-opacity-10';
-            const textColor = isEvenRow ? 'text-dark' : 'text-danger';
-
-            const date = new Date(expense.date).toLocaleDateString('en-GB', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-            });
-
-            return (
-              <div
-                key={expense._id}
-                className={`card p-3 shadow-sm border-0 ${cardBackgroundColor} ${textColor}`}
-                style={{ borderRadius: '12px' }}
-              >
-                <div className="d-flex align-items-center">
-                  <div style={columnStyles[0]} className="text-center">
-                    {date}
-                  </div>
-                  <div
-                    style={columnStyles[1]}
-                    className="text-start fw-semibold"
-                  >
-                    {expense.item}
-                  </div>
-                  <div style={columnStyles[2]} className="text-center">
-                    {expense.amount.toLocaleString()}
-                  </div>
-                  <div style={columnStyles[3]} className="text-center">
-                    {expense.category || '-'}
-                  </div>
-                  <div style={columnStyles[4]} className="text-center">
-                    {expense.payment_method || '-'}
-                  </div>
-                  <div style={columnStyles[5]} className="text-center">
-                    {expense.account || '-'}
-                  </div>
-                  <div style={columnStyles[6]} className="text-center">
-                    {expense.vendor || '-'}
-                  </div>
-                  <div style={columnStyles[7]} className="text-center">
-                    {expense.note || '-'}
-                  </div>
-                  <div style={columnStyles[8]} className="text-center">
-                    {expense.document || '-'}
-                  </div>
-                  {/* <div style={columnStyles[9]} className="text-center">
-                    {expense.slip_image || '-'}
-                  </div> */}
-                  <div style={columnStyles[10]} className="text-center">
-                    {expense.reference || '-'}
-                  </div>
-                  <div style={columnStyles[11]} className="text-center">
-                    {expense.fee?.toLocaleString() ?? '-'}
-                  </div>
-                  <div style={columnStyles[12]} className="text-center">
-                    {expense.createdAt
-                      ? new Date(expense.createdAt).toLocaleDateString()
-                      : '-'}
-                  </div>
-                  <div style={columnStyles[13]} className="text-center">
-                    {expense.updatedAt
-                      ? new Date(expense.updatedAt).toLocaleDateString()
-                      : '-'}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </InfiniteScroll>
+      <ExpenseTable expenses={expenses} />
     </div>
   );
 }

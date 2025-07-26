@@ -9,6 +9,7 @@ import useUser from './hooks/useUser';
 import IncomeList from './pages/IncomeList';
 import ExpensesList from './pages/ExpenseList';
 import SettingList from './pages/SettingList';
+import LineCustomerList from './pages/LineCustomerList';
 
 function App() {
   const user = useUser();
@@ -24,6 +25,7 @@ function App() {
             <Route path="/incomes" element={<IncomeList />} />
             <Route path="/expenses" element={<ExpensesList />} />
             <Route path="/settings" element={<SettingList />} />
+            <Route path="/line-customers" element={<LineCustomerList />} />
           </Routes>
         </Layout>
       ) : (

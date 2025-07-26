@@ -1,57 +1,30 @@
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import type { ICategory } from '../types/category';
+import type { ILineCustomer } from '../types/line-customer';
 import { axiosInstance } from '../hooks/useAxios';
 import { useLayoutStore } from '../store/useLayoutStore';
 import type { HttpResponsePagination } from '../types/global';
-import CategoryItem from '../components/Category/CategoryItem';
+import LineCustomerItem from '../components/LineCustomer/LineCustomerItem';
 
 const PER_PAGE = Number(import.meta.env.VITE_PER_PAGE) || 5;
 
-function Category() {
+function LineCustomer() {
   const { search, setTitle } = useLayoutStore();
   const [page, setPage] = useState(1);
-  const [newCategories, setNewCategories] = useState<ICategory[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [lineCustomers, setLineCustomers] = useState<ILineCustomer[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
-  const [data, setData] = useState<HttpResponsePagination<ICategory> | null>(
-    null,
-  );
+  const [data, setData] =
+    useState<HttpResponsePagination<ILineCustomer> | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    useLayoutStore.setState({
-      onCreate: () => {
-        const currentTime = new Date().toISOString();
-        const currentDate = new Date(currentTime);
-        setNewCategories((prev) => [
-          {
-            _id: `new-${Date.now()}`,
-            name: '',
-            description: '',
-            imageUrl: '',
-            isOpen: false,
-            isUseForm: false,
-            formFormat: '',
-            createdAt: currentDate,
-            updatedAt: currentDate,
-            imagesWarningUrl: [],
-            sortOrder: categories.length + newCategories.length + 1,
-          },
-          ...prev,
-        ]);
-      },
-    });
-  }, [categories, newCategories]);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const response = await axiosInstance.get(
-          `/categories?page=${page}&perPage=${PER_PAGE}&search=${search}`,
+          `/line-customers?page=${page}&perPage=${PER_PAGE}&search=${search}`,
         );
         setData(response.data);
         setError(null);
@@ -66,15 +39,18 @@ function Category() {
   }, [page, search]);
 
   useEffect(() => {
-    setTitle('ประเภทสินค้าที่วางขาย');
+    setTitle('ลูกค้า Line');
   }, [setTitle]);
 
   useEffect(() => {
     if (data?.data) {
       if (page === 1) {
-        setCategories(data.data);
+        setLineCustomers(data.data);
       } else {
-        setCategories((prevCategories) => [...prevCategories, ...data.data]);
+        setLineCustomers((prevLineCustomers) => [
+          ...prevLineCustomers,
+          ...data.data,
+        ]);
       }
 
       setHasMore(data.page * data.perPage < data.total);
@@ -91,33 +67,10 @@ function Category() {
     setIsLoading(true);
     try {
       const response = await axiosInstance.get(
-        `/categories?page=${page}&perPage=${PER_PAGE}&search=${search}`,
+        `/line-customers?page=${page}&perPage=${PER_PAGE}&search=${search}`,
       );
       setData(response.data);
-      setCategories(response.data.data);
-      setPage(1);
-      setHasMore(
-        response.data.page * response.data.perPage < response.data.total,
-      );
-      setError(null);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const refreshDataWithNewCategories = async (id: string) => {
-    setIsLoading(true);
-    try {
-      const response = await axiosInstance.get(
-        `/categories?page=1&perPage=${PER_PAGE}&search=${search}`,
-      );
-      setData(response.data);
-      setCategories(response.data.data);
-      setNewCategories((prev) =>
-        prev.filter((category) => category._id !== id),
-      );
+      setLineCustomers(response.data.data);
       setPage(1);
       setHasMore(
         response.data.page * response.data.perPage < response.data.total,
@@ -145,7 +98,7 @@ function Category() {
   return (
     <div className="container py-4">
       <InfiniteScroll
-        dataLength={categories.length}
+        dataLength={lineCustomers.length}
         next={fetchMoreData}
         hasMore={hasMore}
         loader={
@@ -173,24 +126,12 @@ function Category() {
         }
       >
         <div className="row g-4">
-          {newCategories.map((category) => (
-            <div key={category._id} className="col-md-6 col-12">
-              <CategoryItem
-                initialValues={category}
-                mutate={() => refreshDataWithNewCategories(category._id)}
-                onDelete={() => {
-                  setNewCategories((prev) =>
-                    prev.filter(
-                      (newCategory) => newCategory._id !== category._id,
-                    ),
-                  );
-                }}
+          {lineCustomers.map((lineCustomer) => (
+            <div key={lineCustomer._id} className="col-md-6 col-12">
+              <LineCustomerItem
+                initialValues={lineCustomer}
+                mutate={refreshData}
               />
-            </div>
-          ))}
-          {categories.map((category) => (
-            <div key={category._id} className="col-md-6 col-12">
-              <CategoryItem initialValues={category} mutate={refreshData} />
             </div>
           ))}
         </div>
@@ -199,4 +140,4 @@ function Category() {
   );
 }
 
-export default Category;
+export default LineCustomer;

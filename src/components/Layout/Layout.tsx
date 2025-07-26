@@ -42,6 +42,15 @@ function Layout({ children }: LayoutProps) {
               </Link>
             </li>
             <li>
+              <Link
+                to="/line-customers"
+                onClick={closeSidebar}
+                className="menu-item"
+              >
+                <BsBagHeartFill className="me-2" /> ลูกค้า Line
+              </Link>
+            </li>
+            <li>
               <Link to="/incomes" onClick={closeSidebar} className="menu-item">
                 <BsCurrencyExchange className="me-2" /> บัญชีรายรับ
               </Link>

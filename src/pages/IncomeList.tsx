@@ -1,17 +1,29 @@
 import { useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { axiosInstance } from '../hooks/useAxios';
 import { useLayoutStore } from '../store/useLayoutStore';
 import type { HttpResponsePagination } from '../types/global';
 import type { IIncome } from '../types/income';
+import { Table, Card, Pagination, Spinner } from 'react-bootstrap';
+import EnhancedIncomeTableRow from '../components/Income/EnhancedIncomeTableRow';
+import Swal from 'sweetalert2';
+import type { AxiosError } from 'axios';
 
-const PER_PAGE = Number(import.meta.env.VITE_PER_PAGE) || 5;
+const PER_PAGE = 20;
 
 function IncomeList() {
   const { search, setTitle } = useLayoutStore();
   const [page, setPage] = useState(1);
-  const [incomes, setIncomes] = useState<IIncome[]>([]);
-  const [hasMore, setHasMore] = useState(true);
+
+  const today = new Date();
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+    .toISOString()
+    .split('T')[0];
+  const todayString = today.toISOString().split('T')[0];
+
+  const [searchParams, setSearchParams] = useState({
+    startDate: firstDayOfMonth,
+    endDate: todayString,
+  });
 
   const [data, setData] = useState<HttpResponsePagination<IIncome> | null>(
     null,
@@ -24,7 +36,7 @@ function IncomeList() {
       setIsLoading(true);
       try {
         const response = await axiosInstance.get(
-          `/incomes?page=${page}&perPage=${PER_PAGE}&search=${search}`,
+          `/incomes?page=${page}&perPage=${PER_PAGE}&search=${search}&startDate=${searchParams.startDate}&endDate=${searchParams.endDate}`,
         );
         setData(response.data);
         setError(null);
@@ -36,42 +48,20 @@ function IncomeList() {
     };
 
     fetchData();
-  }, [page, search]);
+  }, [page, search, searchParams]);
 
   useEffect(() => {
     setTitle('รายรับ');
   }, [setTitle]);
 
-  useEffect(() => {
-    if (data?.data) {
-      if (page === 1) {
-        setIncomes(data.data);
-      } else {
-        setIncomes((prevIncomes) => [...prevIncomes, ...data.data]);
-      }
-
-      setHasMore(data.page * data.perPage < data.total);
-    }
-  }, [data]);
-
-  const fetchMoreData = () => {
-    if (!isLoading) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
-
   const refreshData = async () => {
     setIsLoading(true);
     try {
       const response = await axiosInstance.get(
-        `/incomes?page=${page}&perPage=${PER_PAGE}&search=${search}`,
+        `/incomes?page=${page}&perPage=${PER_PAGE}&search=${search}&startDate=${searchParams.startDate}&endDate=${searchParams.endDate}`,
       );
       setData(response.data);
-      setIncomes(response.data.data); // Reset incomes on refresh
-      setPage(1); // Reset page to 1 on refresh
-      setHasMore(
-        response.data.page * response.data.perPage < response.data.total,
-      );
+      setPage(1);
       setError(null);
     } catch (error) {
       setError(error);
@@ -79,6 +69,8 @@ function IncomeList() {
       setIsLoading(false);
     }
   };
+
+  const totalPages = data ? Math.ceil(data.total / data.perPage) : 0;
 
   if (error && page === 1) {
     return (
@@ -92,156 +84,149 @@ function IncomeList() {
     );
   }
 
-  // Define column headers for the card layout
-  const columnHeaders = [
-    'วันที่',
-    'รายการ',
-    'รายรับ',
-    'ต้นทุน',
-    'กำไร',
-    'ช่องทางขาย',
-    'ประเภท',
-    'ธนาคาร',
-    'ผู้จำหน่าย',
-    'ลูกค้า',
-    'อ้างอิง',
-    'ค่าธรรมเนียม',
-    'หมายเหตุ',
-    'สร้างเมื่อ',
-    'อัปเดตเมื่อ',
-  ];
-
   return (
     <div className="container py-4">
-      <h2 className="fw-bold mb-4" style={{ textAlign: 'center' }}>
-        บัญชีรายรับ
-      </h2>
-
-      {/* Header Row for the card-like display */}
-      {/* เปลี่ยน `fw-semibold` เป็น `fw-bold` เพื่อให้ตัวหนาขึ้นอีก */}
-      <div className="row g-2 fw-bold mb-2">
-        {columnHeaders.map((header, index) => (
-          <div key={index} className="col text-center" style={{ flex: '1' }}>
-            {header}
+      <Card className="border-0 shadow-lg">
+        <Card.Header className="bg-success text-white d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+          <h4 className="mb-0 text-white">📑 รายรับ</h4>
+          <div className="d-flex flex-column flex-md-row gap-2">
+            <label htmlFor="startDate" className="text-white mb-0">
+              จาก:
+            </label>
+            <input
+              type="date"
+              id="startDate"
+              className="form-control"
+              value={searchParams.startDate}
+              onChange={(e) =>
+                setSearchParams((prev) => ({
+                  ...prev,
+                  startDate: e.target.value,
+                }))
+              }
+            />
+            <label htmlFor="endDate" className="text-white mb-0 ms-2">
+              ถึง:
+            </label>
+            <input
+              type="date"
+              id="endDate"
+              className="form-control"
+              value={searchParams.endDate}
+              onChange={(e) =>
+                setSearchParams((prev) => ({
+                  ...prev,
+                  endDate: e.target.value,
+                }))
+              }
+            />
           </div>
-        ))}
-      </div>
+        </Card.Header>
+        <Card.Body className="p-0">
+          <Table responsive hover className="mb-0">
+            <thead className="table-light">
+              <tr>
+                <th className="ps-4">รายการ</th>
+                <th>รายรับ</th>
+                <th>ต้นทุน</th>
+                <th>กำไร</th>
+                <th>ช่องทาง/ประเภท</th>
+                <th>ธนาคาร/ซื้อจากร้าน</th>
+                <th className="text-center">สลิป</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={8} className="text-center p-4">
+                    <Spinner animation="border" variant="success" />
+                    <p className="mt-2 mb-0">กำลังโหลดข้อมูล...</p>
+                  </td>
+                </tr>
+              ) : data?.data && data.data.length > 0 ? (
+                data.data.map((income) => (
+                  <EnhancedIncomeTableRow
+                    key={income._id}
+                    initialValues={income}
+                    mutate={refreshData}
+                    onDelete={async () => {
+                      const result = await Swal.fire({
+                        title: 'ยืนยันการลบ?',
+                        text: 'คุณแน่ใจว่าต้องการลบข้อมูลนี้?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#FE5C73',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'ลบ',
+                        cancelButtonText: 'ยกเลิก',
+                      });
 
-      <InfiniteScroll
-        dataLength={incomes.length}
-        next={fetchMoreData}
-        hasMore={hasMore}
-        loader={
-          <div className="text-center my-3">
-            {isLoading ? 'กำลังโหลด...' : 'กำลังโหลดข้อมูล...'}
-          </div>
-        }
-        endMessage={
-          <p className="text-center my-3">
-            <b>
-              {incomes.length > 0 ? 'คุณดูข้อมูลทั้งหมดแล้ว' : 'ไม่พบข้อมูล'}
-            </b>
-          </p>
-        }
-        refreshFunction={refreshData}
-        pullDownToRefresh
-        pullDownToRefreshThreshold={50}
-        pullDownToRefreshContent={
-          <h3 style={{ textAlign: 'center' }}>&#8595; ดึงลงเพื่อรีเฟรช</h3>
-        }
-        releaseToRefreshContent={
-          <h3 style={{ textAlign: 'center' }}>&#8593; ปล่อยเพื่อรีเฟรช</h3>
-        }
-      >
-        <div className="d-grid gap-2">
-          {' '}
-          {/* Using d-grid for vertical spacing between items */}
-          {incomes.map((income, index) => {
-            const isEvenRow = index % 2 === 0;
-            const cardBackgroundColor = isEvenRow
-              ? 'bg-white'
-              : 'bg-info bg-opacity-10'; // Alternating colors
-            const textColor = isEvenRow ? 'text-dark' : 'text-primary';
-
-            const date = new Date(income.date).toLocaleDateString('en-GB', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-            });
-            // const time = new Date(income.date).toLocaleTimeString([], {
-            //   hour: '2-digit',
-            //   minute: '2-digit',
-            // });
-
-            return (
-              <div
-                key={income._id}
-                className={`card p-3 shadow-sm border-0 ${cardBackgroundColor} ${textColor}`}
-                style={{ borderRadius: '12px' }}
+                      if (result.isConfirmed) {
+                        try {
+                          await axiosInstance.delete(`/incomes/${income._id}`);
+                          if (data) {
+                            setData({
+                              ...data,
+                              total: data.total - 1,
+                              data: data.data.filter(
+                                (i) => i._id !== income._id,
+                              ),
+                            });
+                          }
+                          Swal.fire('Deleted!', 'ลบข้อมูลสำเร็จ', 'success');
+                        } catch (error) {
+                          const axiosError = error as AxiosError;
+                          Swal.fire(
+                            'Error',
+                            axiosError.message || 'ไม่สามารถลบได้',
+                            'error',
+                          );
+                        }
+                      }
+                    }}
+                  />
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={8} className="text-center p-4">
+                    ไม่พบข้อมูล
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Card.Body>
+        <Card.Footer className="text-muted text-center">
+          <Pagination>
+            <Pagination.First
+              onClick={() => setPage(1)}
+              disabled={page === 1}
+            />
+            <Pagination.Prev
+              onClick={() => setPage(page - 1)}
+              disabled={page === 1}
+            />
+            {[...Array(totalPages).keys()].map((p) => (
+              <Pagination.Item
+                key={p + 1}
+                active={p + 1 === page}
+                onClick={() => setPage(p + 1)}
               >
-                <div className="row g-2 align-items-center">
-                  {/* Date */}
-                  <div className="col text-center">{date}</div>
-                  {/* Item (with image/avatar if applicable, as per your image) */}
-                  <div className="col d-flex align-items-center gap-2">
-                    {/* Assuming income.imageUrl exists for the avatar */}
-
-                    <span className="fw-semibold">{income.item}</span>
-                  </div>
-                  {/* Income */}
-                  <div className="col text-center">
-                    {income.income.toLocaleString()}
-                  </div>
-                  {/* Cost */}
-                  <div className="col text-center">
-                    {income.cost.toLocaleString()}
-                  </div>
-                  {/* Profit */}
-                  <div className="col text-center">
-                    {income.profit.toLocaleString()}
-                  </div>
-                  {/* Sales Channel */}
-                  <div className="col text-center">
-                    {income.sales_channel || '-'}
-                  </div>
-                  {/* Sales Type */}
-                  <div className="col text-center">
-                    {income.sales_type || '-'}
-                  </div>
-                  {/* Bank */}
-                  <div className="col text-center">{income.bank || '-'}</div>
-                  {/* Supplier */}
-                  <div className="col text-center">
-                    {income.supplier || '-'}
-                  </div>
-                  {/* Customer */}
-                  <div className="col text-center">
-                    {income.customer || '-'}
-                  </div>
-                  {/* Reference */}
-                  <div className="col text-center">
-                    {income.reference || '-'}
-                  </div>
-                  {/* Fee */}
-                  <div className="col text-center">
-                    {income.fee?.toLocaleString() ?? '-'}
-                  </div>
-                  {/* Note */}
-                  <div className="col text-center">{income.note || '-'}</div>
-                  {/* Created At */}
-                  <div className="col text-center">
-                    {new Date(income.createdAt).toLocaleDateString()}
-                  </div>
-                  {/* Updated At */}
-                  <div className="col text-center">
-                    {new Date(income.updatedAt).toLocaleDateString()}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </InfiniteScroll>
+                {p + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              onClick={() => setPage(page + 1)}
+              disabled={page === totalPages}
+            />
+            <Pagination.Last
+              onClick={() => setPage(totalPages)}
+              disabled={page === totalPages}
+            />
+          </Pagination>
+        </Card.Footer>
+      </Card>
     </div>
   );
 }
