@@ -1,7 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App.tsx';
 import '@fontsource/noto-sans-thai/100.css';
 import '@fontsource/noto-sans-thai/200.css';
 import '@fontsource/noto-sans-thai/300.css';
@@ -12,6 +9,9 @@ import '@fontsource/noto-sans-thai/700.css';
 import '@fontsource/noto-sans-thai/800.css';
 import '@fontsource/noto-sans-thai/900.css';
 import './index.css';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.tsx';
 import { AuthProvider } from './contexts/AuthContext.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
