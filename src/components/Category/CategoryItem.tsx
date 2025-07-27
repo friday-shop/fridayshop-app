@@ -7,6 +7,7 @@ import { axiosInstance } from '../../hooks/useAxios';
 import Swal from 'sweetalert2';
 import type { AxiosError } from 'axios';
 import CategoryForm from './CategoryForm';
+import { uploadImage } from '../../utils/uploadImage';
 
 interface CategoryItemProps {
   initialValues: ICategory;
@@ -24,12 +25,11 @@ const validationSchema = Yup.object({
     .required('กรุณากรอกรายละเอียด'),
   imageUrl: Yup.string().url('URL ไม่ถูกต้อง').required('กรุณากรอก URL รูปภาพ'),
   isOpen: Yup.boolean().required('กรุณาระบุสถานะการเปิดใช้งาน'),
-  isUseForm: Yup.boolean().required('กรุณาระบุการใช้งานฟอร์ม'),
-  formFormat: Yup.string().optional(),
-  imagesWarrningUrl: Yup.array()
+  imagesWarningUrl: Yup.array()
     .of(Yup.string().url('URL ไม่ถูกต้อง'))
     .optional()
     .default([]),
+  sortOrder: Yup.number().required('กรุณาระบุลำดับการแสดงผล'),
 });
 
 const CategoryItem: React.FC<CategoryItemProps> = ({
@@ -69,6 +69,10 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
         preview={!isUpdate}
         data={categoryForm.values}
         isEdit={isEdit}
+        onClickImage={async () => {
+          const url = await uploadImage('common');
+          categoryForm.setFieldValue('imageUrl', url);
+        }}
         onClickCard={() => {
           setSelected((prev) => !prev);
           setIsEdit(false);

@@ -1,28 +1,34 @@
 import { useFormik } from 'formik';
-import type { IPayment, IPaymentAccount } from '../../types/payment';
+import type { IPayment, IPaymentAccount } from '../../../types/payment';
+
+export const BANKS = {
+  '002': 'ธนาคารกรุงเทพ',
+  '004': 'ธนาคารกสิกรไทย',
+  '006': 'ธนาคารกรุงไทย',
+  '011': 'ธนาคารทหารไทยธนชาต (ทีทีบี)',
+  '014': 'ธนาคารไทยพาณิชย์',
+  '017': 'ธนาคารซิตี้แบงก์',
+  '018': 'ธนาคารซูมิโตโม มิตซุย แบงกิ้ง คอร์ปอเรชั่น',
+  '020': 'ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)',
+  '022': 'ธนาคารซีไอเอ็มบี ไทย',
+  '024': 'ธนาคารยูโอบี (ไทย)',
+  '025': 'ธนาคารกรุงศรีอยุธยา',
+  '026': 'ธนาคารเมกะ สากลพาณิชย์',
+  '030': 'ธนาคารออมสิน',
+  '033': 'ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร',
+  '034': 'ธนาคารเพื่อการส่งออกและนำเข้าแห่งประเทศไทย',
+  '066': 'ธนาคารอิสลามแห่งประเทศไทย',
+  '069': 'ธนาคารแลนด์ แอนด์ เฮ้าส์',
+  '070': 'ธนาคารไอซีบีซี (ไทย)',
+  '071': 'ธนาคารไทยเครดิต เพื่อรายย่อย',
+  '073': 'ธนาคารทิสโก้',
+  '074': 'ธนาคารเกียรตินาคินภัทร',
+} as const;
 
 interface PaymentFormProps {
   paymentForm: ReturnType<typeof useFormik<IPayment & IPaymentAccount>>;
 }
-const thaiBanks = [
-  'กสิกรไทย',
-  'ไทยพาณิชย์',
-  'กรุงเทพ',
-  'กรุงไทย',
-  'กรุงศรีอยุธยา',
-  'ทหารไทยธนชาต (TTB)',
-  'ออมสิน',
-  'อิสลามแห่งประเทศไทย',
-  'ธกส.',
-  'ยูโอบี',
-  'ซิตี้แบงก์',
-  'แลนด์แอนด์เฮ้าส์',
-  'ไอซีบีซี (ไทย)',
-  'ซีไอเอ็มบี ไทย',
-  'เกียรตินาคินภัทร',
-  'เมกะ สากลพาณิชย์',
-  'ไทยเครดิต',
-];
+
 export default function PaymentForm({ paymentForm }: PaymentFormProps) {
   return (
     <div
@@ -112,43 +118,26 @@ export default function PaymentForm({ paymentForm }: PaymentFormProps) {
         ) : null}
       </div>
       <div className="form-group">
-        <label htmlFor="bankProvider">เลือกธนาคาร</label>
+        <label htmlFor="bankCode">เลือกธนาคาร</label>
         <select
-          id="bankProvider"
-          name="bankProvider"
-          className={`form-control${paymentForm.touched.bankProvider && paymentForm.errors.bankProvider ? ' is-invalid' : ''}`}
-          value={paymentForm.values.bankProvider}
+          id="bankCode"
+          name="bankCode"
+          className={`form-control${paymentForm.touched.bankCode && paymentForm.errors.bankCode ? ' is-invalid' : ''}`}
+          value={paymentForm.values.bankCode}
           onChange={paymentForm.handleChange}
           onBlur={paymentForm.handleBlur}
         >
           <option value="">-- กรุณาเลือกธนาคาร --</option>
-          {thaiBanks.map((bank) => (
-            <option key={bank} value={bank}>
-              {bank}
+          {Object.entries(BANKS).map(([code, name]) => (
+            <option key={code} value={code}>
+              {name}
             </option>
           ))}
         </select>
-        {paymentForm.touched.bankProvider &&
-          paymentForm.errors.bankProvider && (
-            <div className="invalid-feedback">
-              {paymentForm.errors.bankProvider}
-            </div>
-          )}
+        {paymentForm.touched.bankCode && paymentForm.errors.bankCode && (
+          <div className="invalid-feedback">{paymentForm.errors.bankCode}</div>
+        )}
       </div>
-      <button
-        className="rounded-4 border-0 fw-bold"
-        style={{
-          backgroundColor: '#FFBB38',
-          height: '5vh',
-          width: '100%',
-          color: 'white',
-        }}
-        onClick={async () => {
-          await paymentForm.submitForm();
-        }}
-      >
-        ยืนยัน
-      </button>
     </div>
   );
 }

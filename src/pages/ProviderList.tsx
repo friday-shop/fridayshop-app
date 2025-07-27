@@ -38,6 +38,7 @@ function Provider() {
             filterPasswords: [],
             isUseForm: false,
             formFormat: '',
+            isFilterPasswords: false,
             createdAt: currentDate,
             updatedAt: currentDate,
           },

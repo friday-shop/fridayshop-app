@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 interface CategoryCardProps {
   data: ICategory;
   isEdit: boolean;
+  onClickImage: () => void;
   onClickCard: () => void;
   onClickChangeStatus: () => void;
   preview?: boolean;
@@ -16,6 +17,7 @@ interface CategoryCardProps {
 const CategoryCard: React.FC<CategoryCardProps> = ({
   data,
   isEdit,
+  onClickImage,
   onClickCard,
   onClickChangeStatus,
   preview = false,
@@ -33,6 +35,11 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
     >
       <div style={{ position: 'relative' }}>
         <img
+          onClick={(event) => {
+            if (!isEdit) return;
+            event.stopPropagation();
+            onClickImage();
+          }}
           src={imageUrl || unknownImage}
           alt={name}
           onError={(error) => {
@@ -40,8 +47,55 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
             error.currentTarget.src = unknownImage;
           }}
           className="card-img-top"
-          style={{ height: '160px', objectFit: 'cover' }}
+          style={{
+            height: '160px',
+            objectFit: 'cover',
+            cursor: isEdit ? 'pointer' : 'default',
+            filter: isEdit ? 'brightness(0.7)' : 'none',
+            transition: 'filter 0.2s ease-in-out',
+          }}
         />
+        {isEdit && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              color: 'white',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              padding: '6px 12px',
+              borderRadius: '6px',
+              fontWeight: 'bold',
+              pointerEvents: 'none',
+            }}
+          >
+            แก้ไขรูป
+          </div>
+        )}
+        <div
+          style={{
+            position: 'absolute',
+            top: 8,
+            left: 8,
+            zIndex: 1,
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '3px 6px',
+              borderRadius: '6px',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            }}
+          >
+            <p className="card-title fw-bolder text-white mb-0">
+              ลำดับ {data.sortOrder}
+            </p>
+          </div>
+        </div>
         <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 1 }}>
           <Toggle
             status={data.isOpen}
@@ -65,7 +119,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
             }
           }}
         >
-          ดูรายการสินค้า
+          ดูรายการหมวดหมู่
         </button>
       </div>
     </div>

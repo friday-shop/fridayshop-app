@@ -42,8 +42,27 @@ function Layout({ children }: LayoutProps) {
               </Link>
             </li>
             <li>
-              <Link to="/payment" onClick={closeSidebar} className="menu-item">
-                <BsCurrencyExchange className="me-2" /> ชำระเงิน
+              <Link
+                to="/line-customers"
+                onClick={closeSidebar}
+                className="menu-item"
+              >
+                <BsBagHeartFill className="me-2" /> ลูกค้า Line
+              </Link>
+            </li>
+            <li>
+              <Link to="/incomes" onClick={closeSidebar} className="menu-item">
+                <BsCurrencyExchange className="me-2" /> บัญชีรายรับ
+              </Link>
+            </li>
+            <li>
+              <Link to="/expenses" onClick={closeSidebar} className="menu-item">
+                <BsCurrencyExchange className="me-2" /> บัญชีรายจ่าย
+              </Link>
+            </li>
+            <li>
+              <Link to="/settings" onClick={closeSidebar} className="menu-item">
+                <BsCurrencyExchange className="me-2" /> การตั้งค่า
               </Link>
             </li>
           </ul>

@@ -4,9 +4,8 @@ export interface ICategory {
   description: string;
   imageUrl?: string;
   isOpen: boolean;
-  isUseForm: boolean;
-  formFormat?: string;
+  imagesWarningUrl?: string[];
   createdAt: Date;
   updatedAt: Date;
-  imagesWarrningUrl?: string[];
+  sortOrder: number;
 }

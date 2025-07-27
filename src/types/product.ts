@@ -1,28 +1,15 @@
-export interface IProductProvider {
-  providerId: string;
-  id: string;
-  isOpen: boolean;
-}
-
 export interface IProduct {
   _id: string;
-  isOpen: boolean;
   categoryId: string;
   name: string;
-  price: number;
-  imageUrl: string;
-  providers: IProductProviderResponse[];
+  description: string;
+  imageUrl?: string;
+  isOpen: boolean;
+  isUseForm: boolean;
+  formFormat?: string;
+  imagesWarningUrl?: string[];
+  sortOrder: number;
   createdAt: Date;
   updatedAt: Date;
-  purchasable?: number;
-  quantity?: number;
-  expirationDays: number;
-  imagesWarrningUrl?: string[];
-}
-
-export interface IProductProviderResponse extends IProductProvider {
-  price?: number;
-  name?: string;
-  quantity?: number;
-  purchasable?: number;
+  matchList?: string[];
 }

@@ -10,7 +10,7 @@ import type { ICategory } from '../types/category';
 
 const PER_PAGE = Number(import.meta.env.VITE_PER_PAGE) || 5;
 
-function Product() {
+function ProductList() {
   const { categoryId } = useParams<{ categoryId: string }>();
   const { search, setTitle } = useLayoutStore();
   const [page, setPage] = useState(1);
@@ -27,42 +27,37 @@ function Product() {
   useEffect(() => {
     useLayoutStore.setState({
       onCreate: () => {
-        const currentDate = new Date();
+        const currentTime = new Date().toISOString();
+        const currentDate = new Date(currentTime);
+
         setNewProducts((prev) => [
           {
             _id: currentDate.toString(),
-            isOpen: false,
             categoryId: categoryId!,
             name: '',
-            price: 0,
+            description: '',
             imageUrl: '',
-            providers: [
-              {
-                id: '',
-                providerId: '',
-                isOpen: true,
-                name: '',
-                price: 0,
-                quantity: 0,
-              },
-            ],
-            expirationDays: 1,
+            isOpen: false,
+            isUseForm: false,
+            formFormat: '',
+            imagesWarningUrl: [],
             createdAt: currentDate,
             updatedAt: currentDate,
-            imagesWarrningUrl: [],
+            matchList: [],
+            sortOrder: products.length + newProducts.length + 1,
           },
           ...prev,
         ]);
       },
     });
-  }, []);
+  }, [categoryId, products, newProducts]);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const response = await axiosInstance.get(
-          `/products?page=${page}&perPage=${PER_PAGE}&categoryId=${categoryId || ''}`,
+          `/products?page=${page}&perPage=${PER_PAGE}&search=${search}&categoryId=${categoryId || ''}`,
         );
         setData(response.data);
         setError(null);
@@ -85,7 +80,7 @@ function Product() {
           );
           setTitle(response.data?.name);
         } catch (error) {
-          console.error('Error fetching category:', error);
+          console.error('Error fetching product:', error);
         }
       }
     };
@@ -114,10 +109,31 @@ function Product() {
     setIsLoading(true);
     try {
       const response = await axiosInstance.get(
-        `/products?page=${page}&perPage=${PER_PAGE}&categoryId=${categoryId || ''}`,
+        `/products?page=${page}&perPage=${PER_PAGE}&search=${search}&categoryId=${categoryId || ''}`,
       );
       setData(response.data);
       setProducts(response.data.data);
+      setPage(1);
+      setHasMore(
+        response.data.page * response.data.perPage < response.data.total,
+      );
+      setError(null);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const refreshDataWithNewProducts = async (id: string) => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.get(
+        `/products?page=1&perPage=${PER_PAGE}&search=${search}`,
+      );
+      setData(response.data);
+      setProducts(response.data.data);
+      setNewProducts((prev) => prev.filter((product) => product._id !== id));
       setPage(1);
       setHasMore(
         response.data.page * response.data.perPage < response.data.total,
@@ -177,7 +193,7 @@ function Product() {
             <div key={product._id} className="col-md-6 col-12">
               <ProductItem
                 initialValues={product}
-                mutate={refreshData}
+                mutate={() => refreshDataWithNewProducts(product._id)}
                 onDelete={() => {
                   setNewProducts((prev) =>
                     prev.filter((newProduct) => newProduct._id !== product._id),
@@ -197,4 +213,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default ProductList;

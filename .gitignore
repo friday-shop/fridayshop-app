@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Macbook files
+.DS_Store
+.AppleDouble
+.LSOverride
+# Thumbnails
+._*

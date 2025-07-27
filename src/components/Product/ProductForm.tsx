@@ -1,5 +1,7 @@
 import { useFormik } from 'formik';
 import type { IProduct } from '../../types/product';
+import ImagesForm from '../ImagesForm/ImagesForm';
+import TagInput from '../TagInput/TagInput';
 
 interface ProductFormProps {
   productForm: ReturnType<typeof useFormik<IProduct>>;
@@ -14,7 +16,22 @@ export default function ProductForm({ productForm }: ProductFormProps) {
       }}
     >
       <div className="form-group">
-        <label htmlFor="name">ชื่อสินค้า</label>
+        <label htmlFor="sortOrder">ลำดับ</label>
+        <input
+          id="sortOrder"
+          name="sortOrder"
+          type="number"
+          className={`form-control${productForm.touched.sortOrder && productForm.errors.sortOrder ? ' is-invalid' : ''}`}
+          value={productForm.values.sortOrder}
+          onChange={productForm.handleChange}
+          onBlur={productForm.handleBlur}
+        />
+        {productForm.touched.sortOrder && productForm.errors.sortOrder ? (
+          <div className="invalid-feedback">{productForm.errors.sortOrder}</div>
+        ) : null}
+      </div>
+      <div className="form-group">
+        <label htmlFor="name">ชื่อรายการสินค้า</label>
         <input
           id="name"
           name="name"
@@ -30,75 +47,75 @@ export default function ProductForm({ productForm }: ProductFormProps) {
       </div>
 
       <div className="form-group">
-        <label htmlFor="price">ราคา</label>
-        <input
-          id="price"
-          name="price"
-          type="number"
-          className={`form-control${productForm.touched.price && productForm.errors.price ? ' is-invalid' : ''}`}
-          value={productForm.values.price}
+        <label htmlFor="description">รายละเอียด</label>
+        <textarea
+          id="description"
+          name="description"
+          className={`form-control${productForm.touched.description && productForm.errors.description ? ' is-invalid' : ''}`}
+          value={productForm.values.description}
           onChange={productForm.handleChange}
           onBlur={productForm.handleBlur}
+          rows={3}
         />
-        {productForm.touched.price && productForm.errors.price ? (
-          <div className="invalid-feedback">{productForm.errors.price}</div>
-        ) : null}
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="expirationDays">วันหมดอายุ</label>
-        <input
-          id="expirationDays"
-          name="expirationDays"
-          type="number"
-          className={`form-control${productForm.touched.expirationDays && productForm.errors.expirationDays ? ' is-invalid' : ''}`}
-          value={productForm.values.expirationDays}
-          onChange={productForm.handleChange}
-          onBlur={productForm.handleBlur}
-        />
-        {productForm.touched.expirationDays &&
-        productForm.errors.expirationDays ? (
+        {productForm.touched.description && productForm.errors.description ? (
           <div className="invalid-feedback">
-            {productForm.errors.expirationDays}
+            {productForm.errors.description}
           </div>
-        ) : null}
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="imageUrl">URL รูปภาพ</label>
-        <input
-          id="imageUrl"
-          name="imageUrl"
-          type="text"
-          className={`form-control${productForm.touched.imageUrl && productForm.errors.imageUrl ? ' is-invalid' : ''}`}
-          value={productForm.values.imageUrl || ''}
-          onChange={productForm.handleChange}
-          onBlur={productForm.handleBlur}
-        />
-        {productForm.touched.imageUrl && productForm.errors.imageUrl ? (
-          <div className="invalid-feedback">{productForm.errors.imageUrl}</div>
         ) : null}
       </div>
 
       <div className="form-group form-check">
         <input
-          id="isOpen"
-          name="isOpen"
+          id="isUseForm"
+          name="isUseForm"
           type="checkbox"
-          className={`form-check-input${productForm.touched.isOpen && productForm.errors.isOpen ? ' is-invalid' : ''}`}
-          checked={productForm.values.isOpen}
+          className={`form-check-input${productForm.touched.isUseForm && productForm.errors.isUseForm ? ' is-invalid' : ''}`}
+          checked={productForm.values.isUseForm}
           onChange={productForm.handleChange}
           onBlur={productForm.handleBlur}
         />
-        <label htmlFor="isOpen" className="form-check-label">
-          เปิดใช้งาน
+        <label htmlFor="isUseForm" className="form-check-label">
+          ใช้งานฟอร์ม
         </label>
-        {productForm.touched.isOpen && productForm.errors.isOpen ? (
+        {productForm.touched.isUseForm && productForm.errors.isUseForm ? (
           <div className="invalid-feedback d-block">
-            {productForm.errors.isOpen}
+            {productForm.errors.isUseForm}
           </div>
         ) : null}
       </div>
+
+      <div className="form-group">
+        <label htmlFor="formFormat">รูปแบบฟอร์ม</label>
+        <textarea
+          id="formFormat"
+          name="formFormat"
+          className={`form-control${productForm.touched.formFormat && productForm.errors.formFormat ? ' is-invalid' : ''}`}
+          value={productForm.values.formFormat || ''}
+          onChange={productForm.handleChange}
+          onBlur={productForm.handleBlur}
+          rows={
+            (productForm.values.formFormat?.split('\n').length || 1) < 4
+              ? 4
+              : productForm.values.formFormat?.split('\n').length
+          }
+        />
+        {productForm.touched.formFormat && productForm.errors.formFormat ? (
+          <div className="invalid-feedback">
+            {productForm.errors.formFormat}
+          </div>
+        ) : null}
+      </div>
+      <ImagesForm
+        label="รูปภาพเตือน"
+        formik={productForm}
+        fieldName="imagesWarningUrl"
+      />
+      <TagInput
+        label="รายการคำที่เกี่ยวข้อง"
+        name="matchList"
+        formik={productForm}
+        placeholder="เพิ่มรายการคำที่เกี่ยวข้อง"
+      />
     </div>
   );
 }

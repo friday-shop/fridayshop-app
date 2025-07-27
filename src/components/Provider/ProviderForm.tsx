@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import type { IProvider } from '../../types/provider';
 import TagInput from '../TagInput/TagInput';
 import { providersSubDomainList } from '../../constants/provider';
+import { ImageUpload } from '../ImageUpload';
 
 interface ProviderFormProps {
   providerForm: ReturnType<typeof useFormik<IProvider>>;
@@ -31,21 +32,11 @@ export default function ProviderForm({ providerForm }: ProviderFormProps) {
         ) : null}
       </div>
 
-      <div className="form-group">
-        <label htmlFor="imageUrl">ลิงก์รูปภาพ</label>
-        <input
-          id="imageUrl"
-          name="imageUrl"
-          type="text"
-          className={`form-control${providerForm.touched.imageUrl && providerForm.errors.imageUrl ? ' is-invalid' : ''}`}
-          value={providerForm.values.imageUrl}
-          onChange={providerForm.handleChange}
-          onBlur={providerForm.handleBlur}
-        />
-        {providerForm.touched.imageUrl && providerForm.errors.imageUrl ? (
-          <div className="invalid-feedback">{providerForm.errors.imageUrl}</div>
-        ) : null}
-      </div>
+      <ImageUpload<IProvider>
+        label="URL รูปภาพ"
+        name="imageUrl"
+        formik={providerForm}
+      />
       <div className="form-group">
         <label htmlFor="url">url</label>
         <input
@@ -110,13 +101,34 @@ export default function ProviderForm({ providerForm }: ProviderFormProps) {
           ))}
         </select>
       </div>
-      <TagInput
-        label="ตัวกรองรหัสผ่าน"
-        name="filterPasswords"
-        formik={providerForm}
-        placeholder="พิมพ์แล้วกด Enter เพื่อเพิ่ม"
-      />
-
+      <div className="form-group form-check">
+        <input
+          id="isFilterPasswords"
+          name="isFilterPasswords"
+          type="checkbox"
+          className={`form-check-input${providerForm.touched.isFilterPasswords && providerForm.errors.isFilterPasswords ? ' is-invalid' : ''}`}
+          checked={providerForm.values.isFilterPasswords}
+          onChange={providerForm.handleChange}
+          onBlur={providerForm.handleBlur}
+        />
+        <label htmlFor="isFilterPasswords" className="form-check-label">
+          เปิดใช้การกรองรหัสผ่าน
+        </label>
+        {providerForm.touched.isFilterPasswords &&
+        providerForm.errors.isFilterPasswords ? (
+          <div className="invalid-feedback d-block">
+            {providerForm.errors.isFilterPasswords}
+          </div>
+        ) : null}
+      </div>
+      {providerForm.values.isFilterPasswords && (
+        <TagInput
+          label="ตัวกรองรหัสผ่าน"
+          name="filterPasswords"
+          formik={providerForm}
+          placeholder="พิมพ์แล้วกด Enter เพื่อเพิ่ม"
+        />
+      )}
       <div className="form-group form-check">
         <input
           id="isOpen"

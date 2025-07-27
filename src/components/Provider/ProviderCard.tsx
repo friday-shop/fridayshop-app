@@ -21,7 +21,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
   onClickChangeStatus,
 }) => {
   const [isChecking, setIsChecking] = useState(false);
-  const { name, imageUrl, verify, isOpen, point, marker } = providerForm.values;
+  const { name, imageUrl, isOpen, point, marker } = providerForm.values;
   const { errors } = providerForm;
 
   // Memoized validation check
@@ -57,10 +57,13 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
       );
 
       const data = response.data;
-      providerForm.setFieldValue('verify', Boolean(data.verify));
+
+      if (!data) {
+        throw new Error('ไม่พบข้อมูลผู้ให้บริการ');
+      }
 
       // Success feedback
-      if (data.verify) {
+      if (data.point! > 0) {
         await Swal.fire({
           icon: 'success',
           title: 'ยืนยันสำเร็จ',
@@ -71,6 +74,8 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
           timerProgressBar: true,
         });
       }
+
+      providerForm.setFieldValue('point', data.point);
     } catch (error) {
       console.error('Error checking provider:', error);
 
@@ -106,7 +111,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
       };
     }
 
-    if (verify) {
+    if (point && point > 0) {
       return {
         color: '#10b981',
         bgColor: '#f0fdf4',
@@ -173,7 +178,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
                 }}
               />
               {/* Verification badge */}
-              {verify && (
+              {(point || 0) > 0 && (
                 <div
                   className="position-absolute bg-success rounded-circle d-flex align-items-center justify-content-center"
                   style={{
@@ -238,7 +243,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
                 transition: 'all 0.2s ease',
                 transform: isChecking ? 'scale(0.95)' : 'scale(1)',
               }}
-              title={verify ? 'ยืนยันแล้ว' : 'คลิกเพื่อยืนยัน'}
+              title={point && point > 0 ? 'ยืนยันแล้ว' : 'คลิกเพื่อยืนยัน'}
             >
               {isChecking ? (
                 <div
@@ -248,11 +253,12 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
               ) : (
                 <BsCheckCircleFill
                   size={28}
-                  color={verify ? '#10b981' : '#d1d5db'}
+                  color={point && point > 0 ? '#10b981' : '#d1d5db'}
                   style={{
-                    filter: verify
-                      ? 'drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3))'
-                      : 'none',
+                    filter:
+                      point && point > 0
+                        ? 'drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3))'
+                        : 'none',
                     transition: 'all 0.2s ease',
                   }}
                 />

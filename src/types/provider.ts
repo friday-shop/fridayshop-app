@@ -8,10 +8,10 @@ export interface IProvider {
   marker: string;
   subDomain: string;
   filterPasswords: string[];
+  isFilterPasswords: boolean;
   createdAt: Date;
   updatedAt: Date;
   point?: number;
-  verify?: boolean;
 }
 
 export interface IProviderProduct {
@@ -29,4 +29,12 @@ export interface IProviderBuyProduct {
     email: string;
     pass: string | null;
   };
+}
+
+export interface IProviderCheckResponse {
+  name: string;
+  url: string;
+  cookie: string;
+  subDomain: string;
+  point: number;
 }

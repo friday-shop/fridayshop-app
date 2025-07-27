@@ -24,10 +24,11 @@ function Category() {
   useEffect(() => {
     useLayoutStore.setState({
       onCreate: () => {
-        const currentDate = new Date();
+        const currentTime = new Date().toISOString();
+        const currentDate = new Date(currentTime);
         setNewCategories((prev) => [
           {
-            _id: currentDate.toString(),
+            _id: `new-${Date.now()}`,
             name: '',
             description: '',
             imageUrl: '',
@@ -36,13 +37,14 @@ function Category() {
             formFormat: '',
             createdAt: currentDate,
             updatedAt: currentDate,
-            imagesWarrningUrl: [],
+            imagesWarningUrl: [],
+            sortOrder: categories.length + newCategories.length + 1,
           },
           ...prev,
         ]);
       },
     });
-  }, []);
+  }, [categories, newCategories]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,6 +107,29 @@ function Category() {
     }
   };
 
+  const refreshDataWithNewCategories = async (id: string) => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.get(
+        `/categories?page=1&perPage=${PER_PAGE}&search=${search}`,
+      );
+      setData(response.data);
+      setCategories(response.data.data);
+      setNewCategories((prev) =>
+        prev.filter((category) => category._id !== id),
+      );
+      setPage(1);
+      setHasMore(
+        response.data.page * response.data.perPage < response.data.total,
+      );
+      setError(null);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (error && page === 1) {
     return (
       <div className="container text-center mt-5">
@@ -152,7 +177,7 @@ function Category() {
             <div key={category._id} className="col-md-6 col-12">
               <CategoryItem
                 initialValues={category}
-                mutate={refreshData}
+                mutate={() => refreshDataWithNewCategories(category._id)}
                 onDelete={() => {
                   setNewCategories((prev) =>
                     prev.filter(
