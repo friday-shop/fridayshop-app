@@ -126,12 +126,12 @@ function IncomeList() {
           <Table responsive hover className="mb-0">
             <thead className="table-light">
               <tr>
-                <th className="ps-4">รายการ</th>
+                <th className="ps-4">รายการ/ซื้อจากร้าน</th>
                 <th>รายรับ</th>
                 <th>ต้นทุน</th>
                 <th>กำไร</th>
                 <th>ช่องทาง/ประเภท</th>
-                <th>ธนาคาร/ซื้อจากร้าน</th>
+                <th>การชำระเงิน</th>
                 <th className="text-center">สลิป</th>
                 <th>Actions</th>
               </tr>

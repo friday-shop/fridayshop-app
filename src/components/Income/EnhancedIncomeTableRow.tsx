@@ -15,6 +15,7 @@ import * as Yup from 'yup';
 import { axiosInstance } from '../../hooks/useAxios';
 import Swal from 'sweetalert2';
 import type { AxiosError } from 'axios';
+import { getBankColor } from '../../constants/bank';
 
 interface EnhancedIncomeTableRowProps {
   initialValues: IIncome;
@@ -115,7 +116,9 @@ const EnhancedIncomeTableRow: React.FC<EnhancedIncomeTableRowProps> = ({
               `วันที่: ${formatDate(incomeForm.values.date.toString())}`,
             )}
           >
-            <span>{incomeForm.values.item}</span>
+            <span>
+              {incomeForm.values.item} | {incomeForm.values.supplier}
+            </span>
           </OverlayTrigger>
           <div className="text-muted small">
             ลูกค้า: {incomeForm.values.customer}
@@ -140,9 +143,15 @@ const EnhancedIncomeTableRow: React.FC<EnhancedIncomeTableRowProps> = ({
           </Badge>
         </td>
         <td>
-          <div>{incomeForm.values.bank}</div>
+          <div
+            style={{
+              color: getBankColor(incomeForm.values.bank),
+            }}
+          >
+            {incomeForm.values.bank}
+          </div>
           <div className="text-muted small">
-            โดย: {incomeForm.values.supplier}
+            จำนวน: {incomeForm.values.income || 0} บาท
           </div>
         </td>
         <td className="text-center">

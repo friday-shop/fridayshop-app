@@ -1,0 +1,22 @@
+export const getBankColor = (bankName?: string): string => {
+  if (!bankName) return 'inherit';
+  if (bankName.includes('กรุงเทพ')) return '#1e2f97';
+  if (bankName.includes('กสิกร')) return '#138f2d';
+  if (bankName.includes('กรุงไทย')) return '#1ba6dd';
+  if (bankName.includes('ทีทีบี')) return '#ee6e00';
+  if (bankName.includes('ไทยพาณิชย์')) return '#4e2e7f';
+  if (bankName.includes('ซิตี้แบงก์')) return '#005bac';
+  if (bankName.includes('ซูมิโตโม')) return '#2e5ca4';
+  if (bankName.includes('สแตนดาร์ดชาร์เตอร์ด')) return '#00b2a9';
+  if (bankName.includes('ซีไอเอ็มบี')) return '#e30427';
+  if (bankName.includes('ยูโอบี')) return '#1b2f94';
+  if (bankName.includes('กรุงศรี')) return '#f7a800';
+  if (bankName.includes('ออมสิน')) return '#ec208e';
+  if (bankName.includes('อิสลาม')) return '#00743c';
+  if (bankName.includes('แลนด์ แอนด์ เฮ้าส์')) return '#003366';
+  if (bankName.includes('ไอซีบีซี')) return '#d61e1e';
+  if (bankName.includes('ไทยเครดิต')) return '#007dc5';
+  if (bankName.includes('ทิสโก้')) return '#005bac';
+  if (bankName.includes('เกียรตินาคิน')) return '#004c97';
+  return 'inherit';
+};
