@@ -15,8 +15,7 @@ interface LineCustomerItemProps {
 }
 const validationSchema = Yup.object({
   name: Yup.string()
-    .min(4, 'ชื่อประเภทต้องมีอย่างน้อย 4 ตัวอักษร')
-    .max(100, 'ชื่อประเภทต้องไม่เกิน 100 ตัวอักษร')
+    .min(1, 'ชื่อประเภทต้องมีอย่างน้อย 1 ตัวอักษร')
     .required('กรุณากรอกชื่อประเภท'),
   point: Yup.number().required('กรุณาระบุแต้ม'),
   userId: Yup.string().optional(),
