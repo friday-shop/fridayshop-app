@@ -17,6 +17,7 @@ const validationSchema = Yup.object({
   name: Yup.string()
     .min(1, 'ชื่อประเภทต้องมีอย่างน้อย 1 ตัวอักษร')
     .required('กรุณากรอกชื่อประเภท'),
+  isBan: Yup.boolean().required('กรุณาระบุสถานะการแบน'),
   point: Yup.number().required('กรุณาระบุแต้ม'),
   userId: Yup.string().optional(),
 });

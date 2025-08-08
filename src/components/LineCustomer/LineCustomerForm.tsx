@@ -74,6 +74,25 @@ export default function LineCustomerForm({
           </div>
         ) : null}
       </div>
+      <div className="form-group form-check">
+        <input
+          id="isBan"
+          name="isBan"
+          type="checkbox"
+          className={`form-check-input${lineCustomerForm.touched.isBan && lineCustomerForm.errors.isBan ? ' is-invalid' : ''}`}
+          checked={lineCustomerForm.values.isBan}
+          onChange={lineCustomerForm.handleChange}
+          onBlur={lineCustomerForm.handleBlur}
+        />
+        <label htmlFor="isBan" className="form-check-label">
+          ลูกค้าถูกแบน
+        </label>
+        {lineCustomerForm.touched.isBan && lineCustomerForm.errors.isBan ? (
+          <div className="invalid-feedback d-block">
+            {lineCustomerForm.errors.isBan}
+          </div>
+        ) : null}
+      </div>
       <div className="form-group">
         <label htmlFor="point">แต้ม</label>
         <input

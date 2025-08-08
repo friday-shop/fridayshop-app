@@ -3,6 +3,7 @@ export interface ILineCustomer {
   userId: string;
   name: string;
   point: number;
+  isBan?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
