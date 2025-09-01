@@ -5,7 +5,6 @@ import {
   BsChevronDown,
   BsChevronUp,
   BsTrash,
-  BsCheckCircleFill,
   BsFillCaretDownFill,
   BsFillCaretUpFill,
 } from 'react-icons/bs';
@@ -16,6 +15,7 @@ import truncateText from '../../../utils/truncateText';
 import type {
   IProductItem,
   IProductItemProviderResponse,
+  IProviderCheckProduct,
 } from '../../../types/product-item';
 import type { IProvider } from '../../../types/provider';
 
@@ -57,6 +57,34 @@ export default function ProductItemProviderForm({
     setExpandedIndexes((prev) => prev.filter((i) => i !== index));
   };
 
+  const handleSelectVariant = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+    index: number,
+  ) => {
+    const selectedVariantId = event.target.value;
+    productItemForm.setFieldValue(
+      `providers[${index}].variantId`,
+      selectedVariantId,
+    );
+    const data = productItemForm.values.providers[
+      index
+    ].checkData?.variants.find((v) => v.variantId === selectedVariantId);
+
+    productItemForm.setFieldValue(`providers[${index}].name`, data?.name || '');
+    productItemForm.setFieldValue(
+      `providers[${index}].price`,
+      data?.price || 0,
+    );
+    productItemForm.setFieldValue(
+      `providers[${index}].quantity`,
+      data?.quantity || 0,
+    );
+    productItemForm.setFieldValue(
+      `providers[${index}].purchasable`,
+      data?.purchasable || 0,
+    );
+  };
+
   const handleCheckProductItemProvider = async (
     provider: IProductItemProviderResponse,
     index: number,
@@ -75,7 +103,7 @@ export default function ProductItemProviderForm({
     }
 
     try {
-      const response = await axiosInstance.post<IProductItemProviderResponse>(
+      const response = await axiosInstance.post<IProviderCheckProduct>(
         `/providers/check-product-items/${providerId}`,
         {
           productItemId,
@@ -84,22 +112,40 @@ export default function ProductItemProviderForm({
 
       const data = response.data;
 
-      productItemForm.setFieldValue(
-        `providers[${index}].name`,
-        data.name || '',
-      );
-      productItemForm.setFieldValue(
-        `providers[${index}].price`,
-        data.price || 0,
-      );
-      productItemForm.setFieldValue(
-        `providers[${index}].quantity`,
-        data.quantity || 0,
-      );
-      productItemForm.setFieldValue(
-        `providers[${index}].purchasable`,
-        data.purchasable || 0,
-      );
+      if (data.variants.length === 1) {
+        const variant = data.variants[0];
+        productItemForm.setFieldValue(
+          `providers[${index}].variantId`,
+          variant.variantId,
+        );
+
+        productItemForm.setFieldValue(
+          `providers[${index}].name`,
+          variant.name || '',
+        );
+        productItemForm.setFieldValue(
+          `providers[${index}].price`,
+          variant.price || 0,
+        );
+        productItemForm.setFieldValue(
+          `providers[${index}].quantity`,
+          variant.quantity || 0,
+        );
+        productItemForm.setFieldValue(
+          `providers[${index}].purchasable`,
+          variant.purchasable || 0,
+        );
+      } else {
+        productItemForm.setFieldValue(
+          `providers[${index}].name`,
+          data.name || '',
+        );
+
+        productItemForm.setFieldValue(
+          `providers[${index}].checkData`,
+          data || '',
+        );
+      }
     } catch (error) {
       console.error('Error checking productItem provider:', error);
       await Swal.fire({
@@ -237,19 +283,6 @@ export default function ProductItemProviderForm({
                     <div className="provider-actions">
                       <button
                         type="button"
-                        className="btn-check-provider"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCheckProductItemProvider(provider, index);
-                        }}
-                      >
-                        <BsCheckCircleFill
-                          size={16}
-                          color={isVerified ? 'green' : 'grey'}
-                        />
-                      </button>
-                      <button
-                        type="button"
                         className="btn-delete-provider"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -313,33 +346,64 @@ export default function ProductItemProviderForm({
                       </div>
                       <div className="form-group">
                         <label>รหัสสินค้า</label>
-                        <input
-                          type="text"
-                          name={`providers[${index}].id`}
-                          className="form-control"
-                          value={provider.id || ''}
-                          onChange={(event) => {
-                            productItemForm.handleChange(event);
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            name={`providers[${index}].id`}
+                            className="form-control"
+                            value={provider.id || ''}
+                            onChange={(event) => {
+                              productItemForm.handleChange(event);
 
-                            productItemForm.setFieldValue(
-                              `providers[${index}].name`,
-                              '',
-                            );
-                            productItemForm.setFieldValue(
-                              `providers[${index}].price`,
-                              0,
-                            );
-                            productItemForm.setFieldValue(
-                              `providers[${index}].quantity`,
-                              0,
-                            );
-                            productItemForm.setFieldValue(
-                              `providers[${index}].purchasable`,
-                              0,
-                            );
-                          }}
-                        />
+                              productItemForm.setFieldValue(
+                                `providers[${index}].name`,
+                                '',
+                              );
+                              productItemForm.setFieldValue(
+                                `providers[${index}].price`,
+                                0,
+                              );
+                              productItemForm.setFieldValue(
+                                `providers[${index}].quantity`,
+                                0,
+                              );
+                              productItemForm.setFieldValue(
+                                `providers[${index}].purchasable`,
+                                0,
+                              );
+                            }}
+                          />
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary"
+                            onClick={() =>
+                              handleCheckProductItemProvider(provider, index)
+                            }
+                          >
+                            ค้นหา
+                          </button>
+                        </div>
                       </div>
+                      {provider.checkData && (
+                        <div className="form-group">
+                          <label>ตัวเลือกสินค้า</label>
+                          <select
+                            name={`providers[${index}].variantId`}
+                            className="form-select"
+                            value={provider.variantId}
+                            onChange={(e) => handleSelectVariant(e, index)}
+                          >
+                            <option value="" disabled>
+                              เลือกตัวเลือกสินค้า
+                            </option>
+                            {provider.checkData?.variants?.map((v) => (
+                              <option key={v.variantId} value={v.variantId}>
+                                {v.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -39,6 +39,7 @@ function ProductItem() {
             providers: [
               {
                 id: '',
+                variantId: '',
                 providerId: '',
                 isOpen: true,
                 name: '',

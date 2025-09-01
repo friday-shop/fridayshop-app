@@ -16,6 +16,7 @@ export interface IProvider {
 
 export interface IProviderProduct {
   id: string;
+  variantId: string;
   price: number;
   name: string;
   quantity: number;

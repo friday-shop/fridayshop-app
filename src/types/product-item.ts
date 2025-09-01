@@ -1,3 +1,5 @@
+import type { IProviderProduct } from './provider';
+
 export interface IProductItem {
   _id: string;
   productId: string;
@@ -20,7 +22,9 @@ export interface IProductItem {
 export interface IProductItemProvider {
   providerId: string;
   id: string;
+  variantId: string;
   isOpen: boolean;
+  checkData?: IProviderCheckProduct;
 }
 
 export interface IProductItemProviderResponse extends IProductItemProvider {
@@ -28,4 +32,10 @@ export interface IProductItemProviderResponse extends IProductItemProvider {
   name?: string;
   quantity?: number;
   purchasable?: number;
+}
+
+export interface IProviderCheckProduct {
+  id: string;
+  name: string;
+  variants: IProviderProduct[];
 }
