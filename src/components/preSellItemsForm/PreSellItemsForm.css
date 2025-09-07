@@ -1,0 +1,108 @@
+/* Image List */
+.image-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* Sortable Image Item */
+.sortable-image-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.sortable-image-item:hover {
+  background-color: #f1f3f5;
+}
+
+/* Drag Handle */
+.drag-handle {
+  cursor: grab;
+  color: #868e96;
+  padding: 4px;
+}
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Image Preview */
+.image-preview {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  background-color: #e9ecef;
+}
+
+/* Input Group */
+.image-input-group {
+  flex-grow: 1;
+}
+
+.form-label-sm {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+/* Delete Button */
+.delete-btn {
+  background: none;
+  border: none;
+  color: #adb5bd;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.delete-btn:hover {
+  color: #e03131;
+  background-color: #fff5f5;
+}
+
+/* Add Image Button */
+.btn-add-image {
+  width: 100%;
+  padding: 12px;
+  font-weight: 600;
+  background-color: #1971c2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-add-image:hover {
+  background-color: #1864ab;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  border: 2px dashed #ced4da;
+  border-radius: 8px;
+  color: #868e96;
+}
+
+.empty-state p {
+  margin: 0;
+}

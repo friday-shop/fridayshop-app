@@ -17,6 +17,7 @@ export interface IProductItem {
   updatedAt: Date;
   purchasable?: number;
   quantity?: number;
+  preSellItems?: string[];
 }
 
 export interface IProductItemProvider {

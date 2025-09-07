@@ -44,6 +44,10 @@ const validationSchema = Yup.object({
     .required('กรุณาระบุส่วนลด')
     .min(0, 'ส่วนลดต้องไม่ติดลบ'),
   sortOrder: Yup.number().required('กรุณาระบุลำดับการแสดงผล'),
+  preSellItems: Yup.array()
+    .of(Yup.string().trim().notRequired())
+    .optional()
+    .default([]),
 });
 
 const ProductItemItem: React.FC<ProductItemItemProps> = ({

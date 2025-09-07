@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import type { IProductItem } from '../../types/product-item';
 import ImagesForm from '../ImagesForm/ImagesForm';
+import PreSellItemsForm from '../preSellItemsForm/PreSellItemsForm';
 
 interface ProductItemFormProps {
   productItemForm: ReturnType<typeof useFormik<IProductItem>>;
@@ -122,7 +123,11 @@ export default function ProductItemForm({
           </div>
         ) : null}
       </div>
-
+      <PreSellItemsForm
+        label="รายการพรีเซลล์"
+        formik={productItemForm}
+        fieldName="preSellItems"
+      />
       <ImagesForm
         label="รูปภาพเตือน"
         formik={productItemForm}
