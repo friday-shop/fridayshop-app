@@ -25,15 +25,20 @@ const validationSchema = Yup.object({
     .typeError('วันหมดอายุต้องเป็นตัวเลข')
     .required('กรุณากรอกวันหมดอายุ'),
   imageUrl: Yup.string().url('URL ไม่ถูกต้อง').notRequired(),
-  providers: Yup.array().of(
-    Yup.object({
-      providerId: Yup.string().required('กรุณากรอก Provider ID'),
-      id: Yup.string().required('กรุณากรอก ID'),
-      isOpen: Yup.boolean().required('กรุณาระบุ isOpen'),
-      name: Yup.string().required('กรุณาระบุชื่อสินค้า'),
-      price: Yup.number().min(0, 'ราคาต้องไม่ติดลบ').required('กรุณาระบุราคา'),
-    }),
-  ),
+  providers: Yup.array()
+    .of(
+      Yup.object({
+        providerId: Yup.string().required('กรุณากรอก Provider ID'),
+        id: Yup.string().required('กรุณากรอก ID'),
+        isOpen: Yup.boolean().required('กรุณาระบุ isOpen'),
+        name: Yup.string().required('กรุณาระบุชื่อสินค้า'),
+        price: Yup.number()
+          .min(0, 'ราคาต้องไม่ติดลบ')
+          .required('กรุณาระบุราคา'),
+      }),
+    )
+    .optional()
+    .default([]),
   isOpen: Yup.boolean().required('กรุณาระบุสถานะการเปิดใช้งาน'),
   imagesWarningUrl: Yup.array()
     .of(Yup.string().url('URL ไม่ถูกต้อง'))
